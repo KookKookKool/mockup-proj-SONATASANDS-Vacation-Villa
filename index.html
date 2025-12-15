@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonata Sands - Luxury Vacation Villa</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <style>
+        /* --- DESIGN SYSTEM --- */
+        :root {
+            --bg-primary: #FDFBF7;
+            --bg-sand: #F4F1EA;
+            --text-main: #594A3C;   
+            --text-gold: #9C8C74;
+            --text-muted: #7A7570;
+            --accent-green: #4F634D;
+            --accent-dark: #1a1a1a; /* ปรับให้เข้มขึ้นเล็กน้อย */
+            --spacing-section: 120px;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 16px;
+            overflow-x: hidden;
+            opacity: 0; /* ซ่อนก่อนโหลดเสร็จ */
+            visibility: hidden;
+        }
+
+        body.loaded { opacity: 1; visibility: visible; transition: opacity 0.5s; }
+
+        h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; text-transform: uppercase; }
+        
+        .script-font {
+            font-family: 'Allura', cursive; text-transform: none; font-weight: 400; font-size: 3rem;
+            color: var(--text-gold); line-height: 1; margin-bottom: 10px; display: block;
+        }
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+        .section-padding { padding: var(--spacing-section) 0; }
+        
+        /* UI Elements */
+        .btn {
+            display: inline-block; padding: 16px 40px; background-color: var(--accent-green); color: #fff !important;
+            text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; text-decoration: none;
+            transition: all 0.3s ease; border: 1px solid var(--accent-green); cursor: pointer; font-weight: 500;
+        }
+        .btn:hover { background-color: var(--text-main); border-color: var(--text-main); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+        .section-header { text-align: center; margin-bottom: 80px; position: relative; }
+        .section-header h2 { font-size: 3.5rem; color: var(--text-main); margin-bottom: 20px; }
+        .header-divider { width: 1px; height: 60px; background: var(--text-gold); margin: 0 auto 20px; opacity: 0.5; }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 25px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+            z-index: 1000; transition: all 0.5s ease;
+        }
+        nav.scrolled {
+            background: rgba(253, 251, 247, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.6rem; font-family: 'Cormorant Garamond'; font-weight: 700; letter-spacing: 3px; color: #fff; transition: 0.5s; }
+        .nav-links { display: flex; gap: 30px; list-style: none; align-items: center; }
+        .nav-links a { text-decoration: none; color: #fff; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: var(--text-gold); }
+        
+        nav.scrolled .logo, nav.scrolled .nav-links a { color: var(--text-main); }
+        nav.scrolled .nav-links a:hover { color: var(--accent-green); }
+        .nav-btn-highlight { background-color: #fff; color: var(--text-main) !important; padding: 12px 30px; transition: 0.3s;}
+        nav.scrolled .nav-btn-highlight { background-color: var(--accent-green); color: #fff !important; }
+
+        /* Hero */
+        #home {
+            height: 100vh; 
+            background: url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070') center/cover no-repeat;
+            background-attachment: fixed;
+            position: relative; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden;
+        }
+        #home::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, var(--bg-primary), transparent); z-index: 1; }
+        #home::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.2); z-index: 1; }
+        
+        .hero-content { position: relative; z-index: 2; color: #fff; transform-origin: center center; }
+        .hero-content h1 { font-size: 5rem; margin-bottom: 20px; letter-spacing: 0.1em; text-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+
+        /* Overview */
+        .split-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; }
+        .img-stack { position: relative; }
+        .img-main { width: 100%; height: 600px; object-fit: cover; border-radius: 4px; }
+        .img-offset { position: absolute; bottom: -40px; left: -40px; width: 250px; height: 300px; object-fit: cover; border: 10px solid var(--bg-primary); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+
+        /* Villa Types */
+        .villa-header-container { padding: 160px 0 80px; text-align: center; background: var(--bg-sand); }
+        #villa-types { background-color: var(--bg-sand); }
+        .villa-item { display: grid; grid-template-columns: 1fr 1fr; gap: 0; background: #fff; margin-bottom: 0; min-height: 600px; overflow: hidden; }
+        .villa-item:nth-child(even) { direction: rtl; } .villa-item:nth-child(even) .villa-content { direction: ltr; }
+        .villa-image-box { position: relative; overflow: hidden; height: 100%; min-height: 600px;}
+        .villa-image-box img { width: 100%; height: 100%; object-fit: cover; }
+        .villa-content { padding: 80px; display: flex; flex-direction: column; justify-content: center; }
+        .villa-tag { font-size: 0.75rem; letter-spacing: 3px; color: var(--accent-green); text-transform: uppercase; font-weight: 700; margin-bottom: 15px; }
+        .villa-content h3 { font-size: 2.5rem; margin-bottom: 20px; color: var(--text-main); }
+        .villa-desc { color: var(--text-muted); margin-bottom: 30px; max-width: 500px; }
+        .villa-features { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 40px; }
+        .feature-point { font-size: 0.85rem; display: flex; align-items: center; color: var(--text-main); }
+        .feature-point i { color: var(--text-gold); margin-right: 10px; font-size: 0.8rem; }
+
+        /* Gallery */
+        #gallery { background: #fff; }
+        .gallery-masonry { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 300px; gap: 15px; }
+        .g-item { position: relative; overflow: hidden; cursor: pointer; opacity: 0; }
+        .g-item img, .g-item video { width: 100%; height: 100%; object-fit: cover; transition: 0.8s ease; }
+        .g-item:hover img, .g-item:hover video { transform: scale(1.1); filter: brightness(0.8); }
+        .g-wide { grid-column: span 2; } .g-tall { grid-row: span 2; }
+        .g-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; text-align: center; opacity: 0; transition: 0.3s; z-index: 2; pointer-events: none; }
+        .g-item:hover .g-overlay { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+
+        /* Facilities */
+        #facilities { background-color: var(--bg-primary); }
+        .facilities-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 40px; }
+        .facility-box { text-align: center; padding: 40px 20px; border: 1px solid rgba(0,0,0,0.05); background: #fff; }
+        .facility-box:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.05); }
+        .facility-box i { font-size: 2.5rem; color: var(--text-gold); margin-bottom: 20px; }
+        .facility-box h4 { font-family: 'Cormorant Garamond'; letter-spacing: 1px; font-weight: 600; font-size: 1.2rem; }
+
+        /* Reviews */
+        #reviews { background: var(--bg-sand); text-align: center; }
+        .review-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 50px; }
+        .review-card { padding: 40px; background: #fff; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 10px 30px rgba(0,0,0,0.02); position: relative; }
+        .review-card::before { content: '“'; font-family: 'Playfair Display', serif; font-size: 5rem; color: var(--bg-sand); position: absolute; top: 10px; left: 20px; }
+        .stars { color: #D4AF37; margin-bottom: 15px; font-size: 0.8rem; }
+        .review-text { font-style: italic; color: var(--text-main); margin-bottom: 20px; font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+        .reviewer { font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; color: var(--accent-green); text-transform: uppercase; }
+
+        /* Journal */
+        #journal { background: #fff; }
+        .journal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .article-card { background: transparent; }
+        .article-img { width: 100%; height: 300px; object-fit: cover; margin-bottom: 20px; border-radius: 4px; }
+        .article-meta { font-size: 0.75rem; color: var(--text-gold); margin-bottom: 10px; letter-spacing: 1px; }
+        .article-title { font-family: 'Cormorant Garamond'; font-size: 1.8rem; margin-bottom: 15px; line-height: 1.2; }
+        .read-more { font-size: 0.8rem; text-decoration: none; color: var(--text-main); border-bottom: 1px solid var(--text-main); padding-bottom: 3px; transition: 0.3s; }
+        .article-card:hover .read-more { color: var(--accent-green); border-color: var(--accent-green); }
+
+        /* Location */
+        #location { padding: 0; background: #fff; }
+        .location-wrapper { position: relative; height: 600px; }
+        .location-card {
+            position: absolute; top: 50%; left: 10%; transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.95); padding: 50px; max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1); backdrop-filter: blur(5px);
+        }
+        .map-frame { width: 100%; height: 100%; border: 0; filter: grayscale(0.2); }
+        .loc-list li { list-style: none; margin-bottom: 15px; display: flex; align-items: center; color: var(--text-muted); }
+        .loc-list li i { color: var(--accent-green); margin-right: 15px; width: 20px; text-align: center; }
+
+        /* Contact Form */
+        #contact { background: var(--bg-sand); }
+        .contact-container { max-width: 800px; margin: 0 auto; background: #fff; padding: 60px; box-shadow: 0 20px 50px rgba(0,0,0,0.05); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .form-control { width: 100%; padding: 15px; border: 1px solid #ddd; font-family: 'Montserrat'; background: var(--bg-primary); transition: 0.3s; }
+        .form-control:focus { outline: none; border-color: var(--accent-green); background: #fff; }
+        textarea.form-control { height: 150px; resize: none; margin-bottom: 30px; }
+
+        /* --- FOOTER (CORRECTED) --- */
+        footer { 
+            background: var(--accent-dark); 
+            color: #E0E0E0; /* แก้เป็นสีสว่าง */
+            padding: 80px 0; 
+            text-align: center; 
+            font-size: 0.9rem; 
+        }
+        .footer-logo { 
+            font-family: 'Cormorant Garamond'; 
+            font-size: 2.5rem; 
+            color: #fff; 
+            display: block; 
+            margin-bottom: 30px; 
+        }
+        .footer-contact p {
+            color: #ccc; /* สีเทาอ่อน */
+            margin-bottom: 10px;
+        }
+        .footer-social a {
+            color: #fff;
+            margin: 0 15px;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+        .footer-social a:hover {
+            color: var(--text-gold);
+        }
+        .footer-copy {
+            margin-top: 30px;
+            opacity: 0.7; /* เพิ่มความชัด */
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .split-layout, .villa-item, .villa-item:nth-child(even) { grid-template-columns: 1fr; display: flex; flex-direction: column; }
+            .villa-item:nth-child(even) { direction: ltr; }
+            .gallery-masonry, .facilities-grid, .review-grid, .journal-grid { grid-template-columns: repeat(1, 1fr); }
+            .img-offset { display: none; }
+            .nav-links { display: none; }
+            .location-card { position: relative; top: 0; left: 0; transform: none; width: 100%; max-width: none; }
+            .form-row { grid-template-columns: 1fr; }
+            .hero-content h1 { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="container nav-container">
+            <div class="logo">SONATA SANDS</div>
+            <ul class="nav-links">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#villa-types">Villas</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#facilities">Lifestyle</a></li>
+                <li><a href="#reviews">Reviews</a></li>
+                <li><a href="#location">Location</a></li>
+                <li><a href="#contact" class="nav-btn-highlight">Book Now</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home">
+        <div class="hero-content container" id="hero-text">
+            <span class="script-font" style="color: #fff; font-size: 4rem;">Exhale Into Paradise</span>
+            <h1>SONATA SANDS</h1>
+            <a href="#villa-types" class="btn" style="background: #fff; color: var(--text-main) !important;">Discover The Villas</a>
+        </div>
+    </section>
+
+    <section id="overview" class="section-padding">
+        <div class="container split-layout">
+            <div class="text-block gsap-fade-up">
+                <span class="script-font">Welcome to</span>
+                <h2>MODERN COASTAL<br>SANCTUARY</h2>
+                <div class="header-divider"></div>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Experience the perfect blend of luxury and nature. Our villas are designed with a 'Sand Tone' palette, warm whites, and palm greens to create a soothing atmosphere for your soul.</p>
+                <div style="margin-top: 40px;">
+                    <span style="font-family: 'Allura'; font-size: 2.5rem; color: var(--accent-green);">Npm Properties</span>
+                    <p style="font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;">Developer Signature</p>
+                </div>
+            </div>
+            
+            <div class="img-stack gsap-fade-up" data-delay="0.2">
+                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1974" class="img-main" alt="Villa Interior">
+                <img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=2070" class="img-offset" alt="Pool Detail">
+            </div>
+        </div>
+    </section>
+
+    <section id="villa-types">
+        <div class="villa-header-container gsap-fade-up">
+            <span class="script-font">Accommodation</span>
+            <h2>VILLA TYPES</h2>
+            <div class="header-divider"></div>
+        </div>
+
+        <div class="villa-item">
+            <div class="villa-image-box gsap-slide-right">
+                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=1974" alt="2 Bedroom Villa">
+            </div>
+            <div class="villa-content gsap-slide-left">
+                <span class="villa-tag">For Couples</span>
+                <h3>THE SERENITY (2 BED)</h3>
+                <p class="villa-desc">An intimate sanctuary designed for romance and privacy. The Serenity Villa features a seamless flow between the master suite and the private plunge pool.</p>
+                <div class="villa-features">
+                    <span class="feature-point"><i class="fas fa-bed"></i> 2 King Bedrooms</span>
+                    <span class="feature-point"><i class="fas fa-water"></i> Plunge Pool</span>
+                    <span class="feature-point"><i class="fas fa-ruler-combined"></i> 180 Sqm.</span>
+                    <span class="feature-point"><i class="fas fa-tree"></i> Garden View</span>
+                </div>
+                <div><a href="#contact" class="btn">View Details</a></div>
+            </div>
+        </div>
+
+        <div class="villa-item">
+            <div class="villa-image-box gsap-slide-left">
+                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053" alt="3-4 Bedroom Villa">
+            </div>
+            <div class="villa-content gsap-slide-right">
+                <span class="villa-tag">For Families</span>
+                <h3>THE GRAND HORIZON (3-4 BED)</h3>
+                <p class="villa-desc">Defined by space and light, this residence is the ultimate setting for family gatherings. Featuring a double-height living area and western kitchen.</p>
+                <div class="villa-features">
+                    <span class="feature-point"><i class="fas fa-bed"></i> 3-4 Bedrooms</span>
+                    <span class="feature-point"><i class="fas fa-infinity"></i> Infinity Pool</span>
+                    <span class="feature-point"><i class="fas fa-ruler-combined"></i> 320 Sqm.</span>
+                    <span class="feature-point"><i class="fas fa-utensils"></i> Western Kitchen</span>
+                </div>
+                <div><a href="#contact" class="btn">View Details</a></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="section-padding">
+        <div class="container">
+            <div class="section-header gsap-fade-up">
+                <span class="script-font">Visual Journey</span>
+                <h2>THE GALLERY</h2>
+                <div class="header-divider"></div>
+            </div>
+            
+            <div class="gallery-masonry">
+                <div class="g-item g-wide g-tall gsap-pop">
+                    <video autoplay muted loop playsinline>
+                        <source src="https://www.pexels.com/download/video/33022497/" type="video/mp4">
+                    </video>
+                    <div class="g-overlay"><h3>Cinematic Experience</h3></div>
+                </div>
+                <div class="g-item gsap-pop">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070" alt="Exterior">
+                    <div class="g-overlay"><h5>Architecture</h5></div>
+                </div>
+                <div class="g-item gsap-pop">
+                    <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=2070" alt="Living">
+                    <div class="g-overlay"><h5>Interiors</h5></div>
+                </div>
+                <div class="g-item g-wide gsap-pop">
+                    <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=2000" alt="Bedroom Detail">
+                    <div class="g-overlay"><h5>Master Suite</h5></div>
+                </div>
+                <div class="g-item g-wide gsap-pop">
+                    <img src="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?q=80&w=1974" alt="Bath">
+                    <div class="g-overlay"><h5>Spa Bath</h5></div>
+                </div>
+                <div class="g-item g-wide gsap-pop">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073" alt="Nature">
+                    <div class="g-overlay"><h5>Nature</h5></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="facilities" class="section-padding">
+        <div class="container">
+            <div class="section-header gsap-fade-up">
+                <span class="script-font">Lifestyle</span>
+                <h2>CURATED FACILITIES</h2>
+                <div class="header-divider"></div>
+            </div>
+            <div class="facilities-grid">
+                <div class="facility-box gsap-stagger-up"><i class="fas fa-concierge-bell"></i><h4>24/7 Concierge</h4></div>
+                <div class="facility-box gsap-stagger-up"><i class="fas fa-swimming-pool"></i><h4>Saltwater System</h4></div>
+                <div class="facility-box gsap-stagger-up"><i class="fas fa-shield-alt"></i><h4>Smart Security</h4></div>
+                <div class="facility-box gsap-stagger-up"><i class="fas fa-spa"></i><h4>In-Villa Spa</h4></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews" class="section-padding">
+        <div class="container">
+            <div class="section-header gsap-fade-up">
+                <span class="script-font">Guest Experiences</span>
+                <h2>WHAT THEY SAY</h2>
+                <div class="header-divider"></div>
+            </div>
+            <div class="review-grid">
+                <div class="review-card gsap-stagger-up">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">"The most peaceful vacation we've ever had. The Sand Tone design really calms the mind."</p>
+                    <span class="reviewer">SARAH & JAMES, UK</span>
+                </div>
+                <div class="review-card gsap-stagger-up">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">"Exceptional service and the villa layout was perfect for our large family. Highly recommended."</p>
+                    <span class="reviewer">THE WONG FAMILY, HK</span>
+                </div>
+                <div class="review-card gsap-stagger-up">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">"A hidden gem in Krabi. The attention to detail in the architecture is stunning."</p>
+                    <span class="reviewer">MARCUS D., GERMANY</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="journal" class="section-padding">
+        <div class="container">
+            <div class="section-header gsap-fade-up">
+                <span class="script-font">Lifestyle</span>
+                <h2>THE JOURNAL</h2>
+                <p style="color:var(--text-muted); margin-top: 10px;">Stories of design, travel, and living.</p>
+            </div>
+            <div class="journal-grid">
+                <article class="article-card gsap-stagger-up">
+                    <img src="https://images.unsplash.com/photo-1519451241324-20b4ea2c4220?q=80&w=2070" class="article-img" alt="Design">
+                    <div class="article-meta">DESIGN • DEC 12, 2025</div>
+                    <h3 class="article-title">Why 'Sand Tone' is the Future of Tropical Architecture</h3>
+                    <a href="#" class="read-more">Read Story</a>
+                </article>
+                <article class="article-card gsap-stagger-up">
+                    <img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=2039" class="article-img" alt="Krabi">
+                    <div class="article-meta">TRAVEL • NOV 28, 2025</div>
+                    <h3 class="article-title">Top 5 Hidden Beaches in Krabi You Must Visit</h3>
+                    <a href="#" class="read-more">Read Story</a>
+                </article>
+                <article class="article-card gsap-stagger-up">
+                    <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1974" class="article-img" alt="Food">
+                    <div class="article-meta">LIFESTYLE • NOV 15, 2025</div>
+                    <h3 class="article-title">A Guide to Southern Thai Fine Dining Experiences</h3>
+                    <a href="#" class="read-more">Read Story</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="location" class="gsap-fade-up">
+        <div class="location-wrapper">
+            <iframe class="map-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31919.16687126868!2d98.810565!3d8.030653!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3051943896c21e79%3A0x40223bc2c382340!2sAo%20Nang%2C%20Mueang%20Krabi%20District%2C%20Krabi!5e0!3m2!1sen!2sth!4v1700000000000!5m2!1sen!2sth" allowfullscreen="" loading="lazy"></iframe>
+            <div class="location-card">
+                <span class="script-font" style="font-size: 2rem; color: var(--accent-green);">Destination</span>
+                <h3>KRABI & SAMUI</h3>
+                <p style="margin-bottom: 20px; color: var(--text-muted);">Situated in the most prestigious zone, offering both seclusion and connectivity.</p>
+                <ul class="loc-list">
+                    <li><i class="fas fa-umbrella-beach"></i> 5 Mins to Private Beach</li>
+                    <li><i class="fas fa-plane"></i> 20 Mins to International Airport</li>
+                    <li><i class="fas fa-shopping-bag"></i> 10 Mins to Lifestyle Mall</li>
+                </ul>
+                <a href="#" class="btn-outline" style="border-bottom: 1px solid #333; color: #333; text-decoration: none; font-size: 0.8rem;">GET DIRECTIONS</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section-padding gsap-fade-up">
+        <div class="container">
+            <div class="section-header">
+                <span class="script-font">Reserve Your Sanctuary</span>
+                <h2>GET IN TOUCH</h2>
+                <div class="header-divider"></div>
+            </div>
+            
+            <div class="contact-container">
+                <form>
+                    <div class="form-row">
+                        <input type="text" class="form-control" placeholder="Your Name" required>
+                        <input type="email" class="form-control" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-row">
+                        <input type="tel" class="form-control" placeholder="Phone Number">
+                        <select class="form-control">
+                            <option>Interested in: 2 Bedroom Villa</option>
+                            <option>Interested in: 3-4 Bedroom Villa</option>
+                            <option>General Inquiry</option>
+                        </select>
+                    </div>
+                    <textarea class="form-control" placeholder="Your Message"></textarea>
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn">Send Enquiry</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <span class="footer-logo">SONATA SANDS</span>
+            <div class="footer-contact">
+                <p>123 Beach Road, Krabi, Thailand</p>
+                <p>+66 81 234 5678 | hello@sonatasands.com</p>
+            </div>
+            <div class="footer-social" style="margin: 30px 0;">
+                <a href="#"><i class="fab fa-facebook fa-lg"></i></a>
+                <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
+                <a href="#"><i class="fab fa-line fa-lg"></i></a>
+            </div>
+            <p class="footer-copy">© 2025 Sonata Sands by NPM Properties. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener("load", () => {
+            document.body.classList.add("loaded");
+            
+            gsap.registerPlugin(ScrollTrigger);
+
+            // 1. HERO TEXT ZOOM
+            gsap.to("#hero-text", {
+                scrollTrigger: {
+                    trigger: "#home",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: 1
+                },
+                y: 200,
+                scale: 1.5,
+                opacity: 0
+            });
+
+            // 2. NAV
+            const nav = document.getElementById("navbar");
+            ScrollTrigger.create({
+                start: "top -50",
+                end: 99999,
+                toggleClass: { className: "scrolled", targets: nav }
+            });
+
+            // 3. FADE UP
+            const fadeUpElements = document.querySelectorAll('.gsap-fade-up');
+            fadeUpElements.forEach(elem => {
+                gsap.fromTo(elem, 
+                    { y: 60, opacity: 0 },
+                    {
+                        y: 0, opacity: 1, duration: 1.2, ease: "power3.out",
+                        delay: elem.dataset.delay || 0,
+                        scrollTrigger: {
+                            trigger: elem,
+                            start: "top 75%",
+                            toggleActions: "play reverse play reverse"
+                        }
+                    }
+                );
+            });
+
+            // 4. SIDE SLIDE
+            const slideLeft = document.querySelectorAll('.gsap-slide-left');
+            slideLeft.forEach(elem => {
+                gsap.fromTo(elem,
+                    { x: -100, opacity: 0 },
+                    {
+                        x: 0, opacity: 1, duration: 1.2, ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: elem,
+                            start: "top 80%",
+                            toggleActions: "play reverse play reverse"
+                        }
+                    }
+                );
+            });
+
+            const slideRight = document.querySelectorAll('.gsap-slide-right');
+            slideRight.forEach(elem => {
+                gsap.fromTo(elem,
+                    { x: 100, opacity: 0 },
+                    {
+                        x: 0, opacity: 1, duration: 1.2, ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: elem,
+                            start: "top 80%",
+                            toggleActions: "play reverse play reverse"
+                        }
+                    }
+                );
+            });
+
+            // 5. STAGGERED
+            const animateBatch = (selector) => {
+                ScrollTrigger.batch(selector, {
+                    start: "top 85%",
+                    onEnter: batch => gsap.to(batch, {opacity: 1, y: 0, stagger: 0.15, overwrite: true}),
+                    onLeave: batch => gsap.set(batch, {opacity: 0, y: 30, overwrite: true}),
+                    onEnterBack: batch => gsap.to(batch, {opacity: 1, y: 0, stagger: 0.15, overwrite: true}),
+                    onLeaveBack: batch => gsap.set(batch, {opacity: 0, y: 30, overwrite: true})
+                });
+                gsap.set(selector, {opacity: 0, y: 30});
+            }
+
+            animateBatch(".gsap-stagger-up");
+            
+            // 6. GALLERY POP
+            const galleryItems = document.querySelectorAll(".gsap-pop");
+            gsap.set(galleryItems, {scale: 0.8, opacity: 0});
+            
+            ScrollTrigger.batch(".gsap-pop", {
+                start: "top 80%",
+                onEnter: batch => gsap.to(batch, {
+                    scale: 1, opacity: 1, 
+                    duration: 0.8, 
+                    ease: "back.out(1.7)", 
+                    stagger: 0.1
+                }),
+                onLeave: batch => gsap.to(batch, {opacity: 0, scale: 0.8}),
+                onEnterBack: batch => gsap.to(batch, {opacity: 1, scale: 1, stagger: 0.1}),
+                onLeaveBack: batch => gsap.to(batch, {opacity: 0, scale: 0.8})
+            });
+
+        });
+    </script>
+
+</body>
+</html>
