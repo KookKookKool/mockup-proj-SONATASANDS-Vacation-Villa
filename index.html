@@ -23,7 +23,7 @@
             --text-gold: #9C8C74;
             --text-muted: #7A7570;
             --accent-green: #4F634D;
-            --accent-dark: #1a1a1a; /* ปรับให้เข้มขึ้นเล็กน้อย */
+            --accent-dark: #1a1a1a;
             --spacing-section: 120px;
         }
         
@@ -36,7 +36,7 @@
             line-height: 1.8;
             font-size: 16px;
             overflow-x: hidden;
-            opacity: 0; /* ซ่อนก่อนโหลดเสร็จ */
+            opacity: 0;
             visibility: hidden;
         }
 
@@ -98,8 +98,10 @@
         #home::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, var(--bg-primary), transparent); z-index: 1; }
         #home::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.2); z-index: 1; }
         
-        .hero-content { position: relative; z-index: 2; color: #fff; transform-origin: center center; }
-        .hero-content h1 { font-size: 5rem; margin-bottom: 20px; letter-spacing: 0.1em; text-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .hero-content { position: relative; z-index: 2; color: #fff; }
+        /* Performance hint for smoother animation */
+        #hero-title, #hero-subtitle { will-change: transform, opacity; transform-origin: center center; }
+        #hero-title { font-size: 5rem; margin-bottom: 20px; letter-spacing: 0.1em; text-shadow: 0 4px 20px rgba(0,0,0,0.2); }
 
         /* Overview */
         .split-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; }
@@ -179,10 +181,10 @@
         .form-control:focus { outline: none; border-color: var(--accent-green); background: #fff; }
         textarea.form-control { height: 150px; resize: none; margin-bottom: 30px; }
 
-        /* --- FOOTER (CORRECTED) --- */
+        /* FOOTER (Visible Text) */
         footer { 
             background: var(--accent-dark); 
-            color: #E0E0E0; /* แก้เป็นสีสว่าง */
+            color: #E0E0E0; /* Light text color */
             padding: 80px 0; 
             text-align: center; 
             font-size: 0.9rem; 
@@ -194,24 +196,10 @@
             display: block; 
             margin-bottom: 30px; 
         }
-        .footer-contact p {
-            color: #ccc; /* สีเทาอ่อน */
-            margin-bottom: 10px;
-        }
-        .footer-social a {
-            color: #fff;
-            margin: 0 15px;
-            font-size: 1.2rem;
-            transition: 0.3s;
-        }
-        .footer-social a:hover {
-            color: var(--text-gold);
-        }
-        .footer-copy {
-            margin-top: 30px;
-            opacity: 0.7; /* เพิ่มความชัด */
-            font-size: 0.8rem;
-        }
+        .footer-contact p { color: #ccc; margin-bottom: 10px; }
+        .footer-social a { color: #fff; margin: 0 15px; font-size: 1.2rem; transition: 0.3s; }
+        .footer-social a:hover { color: var(--text-gold); }
+        .footer-copy { margin-top: 30px; opacity: 0.7; font-size: 0.8rem; }
 
         /* Responsive */
         @media (max-width: 1024px) {
@@ -244,9 +232,9 @@
     </nav>
 
     <section id="home">
-        <div class="hero-content container" id="hero-text">
-            <span class="script-font" style="color: #fff; font-size: 4rem;">Exhale Into Paradise</span>
-            <h1>SONATA SANDS</h1>
+        <div class="hero-content container">
+            <span class="script-font" id="hero-subtitle" style="color: #fff; font-size: 4rem;">Exhale Into Paradise</span>
+            <h1 id="hero-title">SONATA SANDS</h1>
             <a href="#villa-types" class="btn" style="background: #fff; color: var(--text-main) !important;">Discover The Villas</a>
         </div>
     </section>
@@ -497,16 +485,29 @@
             
             gsap.registerPlugin(ScrollTrigger);
 
-            // 1. HERO TEXT ZOOM
-            gsap.to("#hero-text", {
+            // 1. HERO TEXT ZOOM (Super Smooth & Deep)
+            // ซูมเฉพาะ H1
+            gsap.to("#hero-title", {
                 scrollTrigger: {
                     trigger: "#home",
                     start: "top top",
                     end: "bottom top",
-                    scrub: 1
+                    scrub: 3 // เพิ่มค่า scrub เป็น 3 เพื่อความนุ่มนวลขั้นสุด (มีแรงเฉื่อย)
                 },
-                y: 200,
-                scale: 1.5,
+                scale: 4.5, // ซูมให้ใหญ่สะใจ (Deep Zoom)
+                opacity: 0, // ค่อยๆ จางหายไป
+                ease: "power1.inOut"
+            });
+            
+            // เฟดตัวหนังสือเล็กออกไปเบาๆ ไม่ต้องซูมตาม
+            gsap.to("#hero-subtitle", {
+                scrollTrigger: {
+                    trigger: "#home",
+                    start: "top top",
+                    end: "30% top",
+                    scrub: 2
+                },
+                y: -50,
                 opacity: 0
             });
 
