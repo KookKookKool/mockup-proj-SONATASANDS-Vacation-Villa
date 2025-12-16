@@ -36,8 +36,7 @@
             line-height: 1.8;
             font-size: 16px;
             overflow-x: hidden;
-            opacity: 0;
-            visibility: hidden;
+            opacity: 0; visibility: hidden; /* Hide until loaded */
         }
 
         body.loaded { opacity: 1; visibility: visible; transition: opacity 0.5s; }
@@ -67,7 +66,7 @@
         /* Navigation */
         nav {
             position: fixed; top: 0; width: 100%; padding: 25px 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 100%);
             z-index: 1000; transition: all 0.5s ease;
         }
         nav.scrolled {
@@ -88,20 +87,48 @@
         .nav-btn-highlight { background-color: #fff; color: var(--text-main) !important; padding: 12px 30px; transition: 0.3s;}
         nav.scrolled .nav-btn-highlight { background-color: var(--accent-green); color: #fff !important; }
 
-        /* Hero */
+        /* --- HERO (UPDATED STRUCTURE FOR SMOOTHNESS) --- */
         #home {
             height: 100vh; 
-            background: url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070') center/cover no-repeat;
-            background-attachment: fixed;
-            position: relative; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden;
+            width: 100%;
+            position: relative; 
+            display: flex; align-items: center; justify-content: center; text-align: center; 
+            overflow: hidden;
         }
-        #home::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, var(--bg-primary), transparent); z-index: 1; }
-        #home::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.2); z-index: 1; }
+        /* Background Layer แยกออกมาเพื่อความลื่น */
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070') center/cover no-repeat;
+            z-index: 1;
+            will-change: transform; /* บอก Browser ให้เตรียมการ์ดจอ */
+        }
+        .hero-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.2); 
+            z-index: 2;
+        }
+        .hero-gradient {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; 
+            background: linear-gradient(to top, var(--bg-primary), transparent); 
+            z-index: 3;
+        }
         
-        .hero-content { position: relative; z-index: 2; color: #fff; }
-        /* Performance hint for smoother animation */
-        #hero-title, #hero-subtitle { will-change: transform, opacity; transform-origin: center center; }
-        #hero-title { font-size: 5rem; margin-bottom: 20px; letter-spacing: 0.1em; text-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .hero-content { 
+            position: relative; 
+            z-index: 4; 
+            color: #fff; 
+            width: 100%;
+        }
+        #hero-title { 
+            font-size: 6rem; /* ใหญ่ขึ้น */
+            margin-bottom: 20px; 
+            letter-spacing: 0.1em; 
+            text-shadow: 0 4px 30px rgba(0,0,0,0.3);
+            will-change: transform, opacity; /* Key for smooth zoom */
+            transform-origin: center center;
+        }
+        #hero-subtitle { will-change: transform, opacity; }
+        .hero-btn-wrapper { will-change: opacity; }
 
         /* Overview */
         .split-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; }
@@ -181,10 +208,10 @@
         .form-control:focus { outline: none; border-color: var(--accent-green); background: #fff; }
         textarea.form-control { height: 150px; resize: none; margin-bottom: 30px; }
 
-        /* FOOTER (Visible Text) */
+        /* Footer (Updated Colors) */
         footer { 
             background: var(--accent-dark); 
-            color: #E0E0E0; /* Light text color */
+            color: #E0E0E0; /* สว่างขึ้น */
             padding: 80px 0; 
             text-align: center; 
             font-size: 0.9rem; 
@@ -199,7 +226,7 @@
         .footer-contact p { color: #ccc; margin-bottom: 10px; }
         .footer-social a { color: #fff; margin: 0 15px; font-size: 1.2rem; transition: 0.3s; }
         .footer-social a:hover { color: var(--text-gold); }
-        .footer-copy { margin-top: 30px; opacity: 0.7; font-size: 0.8rem; }
+        .footer-copy { margin-top: 30px; opacity: 0.8; font-size: 0.8rem; }
 
         /* Responsive */
         @media (max-width: 1024px) {
@@ -232,10 +259,15 @@
     </nav>
 
     <section id="home">
+        <div class="hero-bg"></div> <div class="hero-overlay"></div>
+        <div class="hero-gradient"></div>
+        
         <div class="hero-content container">
             <span class="script-font" id="hero-subtitle" style="color: #fff; font-size: 4rem;">Exhale Into Paradise</span>
             <h1 id="hero-title">SONATA SANDS</h1>
-            <a href="#villa-types" class="btn" style="background: #fff; color: var(--text-main) !important;">Discover The Villas</a>
+            <div class="hero-btn-wrapper">
+                <a href="#villa-types" class="btn" style="background: #fff; color: var(--text-main) !important;">Discover The Villas</a>
+            </div>
         </div>
     </section>
 
@@ -485,33 +517,41 @@
             
             gsap.registerPlugin(ScrollTrigger);
 
-            // 1. HERO TEXT ZOOM (Super Smooth & Deep)
-            // ซูมเฉพาะ H1
-            gsap.to("#hero-title", {
+            // 1. HERO PINNED ZOOM (The main fix)
+            let tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: "#home",
                     start: "top top",
-                    end: "bottom top",
-                    scrub: 3 // เพิ่มค่า scrub เป็น 3 เพื่อความนุ่มนวลขั้นสุด (มีแรงเฉื่อย)
-                },
-                scale: 4.5, // ซูมให้ใหญ่สะใจ (Deep Zoom)
-                opacity: 0, // ค่อยๆ จางหายไป
-                ease: "power1.inOut"
-            });
-            
-            // เฟดตัวหนังสือเล็กออกไปเบาๆ ไม่ต้องซูมตาม
-            gsap.to("#hero-subtitle", {
-                scrollTrigger: {
-                    trigger: "#home",
-                    start: "top top",
-                    end: "30% top",
-                    scrub: 2
-                },
-                y: -50,
-                opacity: 0
+                    end: "+=100%", // ตรึงไว้นานพอสมควร (100% viewport height)
+                    pin: true,     // ตรึงหน้าจอไว้
+                    scrub: 1,      // ค่า scrub ต่ำลงเพื่อให้ตอบสนองเร็วขึ้น (0.5 - 1)
+                    anticipatePin: 1
+                }
             });
 
-            // 2. NAV
+            tl.to("#hero-title", {
+                scale: 5,       // ซูมเยอะๆ เหมือนทะลุ
+                opacity: 0,     // จางหายไป
+                duration: 1,
+                ease: "power2.inOut"
+            })
+            .to("#hero-subtitle", {
+                opacity: 0,
+                y: -100,
+                duration: 0.5
+            }, 0) // เล่นพร้อมกัน
+            .to(".hero-btn-wrapper", {
+                opacity: 0,
+                y: 50,
+                duration: 0.5
+            }, 0)
+            .to(".hero-bg", {
+                scale: 1.2, // พื้นหลังขยายตามนิดหน่อยให้มีมิติ
+                duration: 1
+            }, 0);
+
+
+            // 2. NAV GRADIENT
             const nav = document.getElementById("navbar");
             ScrollTrigger.create({
                 start: "top -50",
@@ -519,7 +559,7 @@
                 toggleClass: { className: "scrolled", targets: nav }
             });
 
-            // 3. FADE UP
+            // 3. FADE UP (Other sections)
             const fadeUpElements = document.querySelectorAll('.gsap-fade-up');
             fadeUpElements.forEach(elem => {
                 gsap.fromTo(elem, 
@@ -529,7 +569,7 @@
                         delay: elem.dataset.delay || 0,
                         scrollTrigger: {
                             trigger: elem,
-                            start: "top 75%",
+                            start: "top 80%", // ปรับจุดเริ่มให้เห็นผลเร็วขึ้น
                             toggleActions: "play reverse play reverse"
                         }
                     }
@@ -540,7 +580,7 @@
             const slideLeft = document.querySelectorAll('.gsap-slide-left');
             slideLeft.forEach(elem => {
                 gsap.fromTo(elem,
-                    { x: -100, opacity: 0 },
+                    { x: -50, opacity: 0 }, // ลดระยะทางลงให้ดูนุ่มขึ้น
                     {
                         x: 0, opacity: 1, duration: 1.2, ease: "power2.out",
                         scrollTrigger: {
@@ -555,7 +595,7 @@
             const slideRight = document.querySelectorAll('.gsap-slide-right');
             slideRight.forEach(elem => {
                 gsap.fromTo(elem,
-                    { x: 100, opacity: 0 },
+                    { x: 50, opacity: 0 },
                     {
                         x: 0, opacity: 1, duration: 1.2, ease: "power2.out",
                         scrollTrigger: {
@@ -567,13 +607,13 @@
                 );
             });
 
-            // 5. STAGGERED
+            // 5. STAGGERED LISTS
             const animateBatch = (selector) => {
                 ScrollTrigger.batch(selector, {
                     start: "top 85%",
-                    onEnter: batch => gsap.to(batch, {opacity: 1, y: 0, stagger: 0.15, overwrite: true}),
+                    onEnter: batch => gsap.to(batch, {opacity: 1, y: 0, stagger: 0.1, overwrite: true}),
                     onLeave: batch => gsap.set(batch, {opacity: 0, y: 30, overwrite: true}),
-                    onEnterBack: batch => gsap.to(batch, {opacity: 1, y: 0, stagger: 0.15, overwrite: true}),
+                    onEnterBack: batch => gsap.to(batch, {opacity: 1, y: 0, stagger: 0.1, overwrite: true}),
                     onLeaveBack: batch => gsap.set(batch, {opacity: 0, y: 30, overwrite: true})
                 });
                 gsap.set(selector, {opacity: 0, y: 30});
@@ -583,19 +623,19 @@
             
             // 6. GALLERY POP
             const galleryItems = document.querySelectorAll(".gsap-pop");
-            gsap.set(galleryItems, {scale: 0.8, opacity: 0});
+            gsap.set(galleryItems, {scale: 0.9, opacity: 0});
             
             ScrollTrigger.batch(".gsap-pop", {
-                start: "top 80%",
+                start: "top 85%",
                 onEnter: batch => gsap.to(batch, {
                     scale: 1, opacity: 1, 
                     duration: 0.8, 
                     ease: "back.out(1.7)", 
                     stagger: 0.1
                 }),
-                onLeave: batch => gsap.to(batch, {opacity: 0, scale: 0.8}),
+                onLeave: batch => gsap.to(batch, {opacity: 0, scale: 0.9}),
                 onEnterBack: batch => gsap.to(batch, {opacity: 1, scale: 1, stagger: 0.1}),
-                onLeaveBack: batch => gsap.to(batch, {opacity: 0, scale: 0.8})
+                onLeaveBack: batch => gsap.to(batch, {opacity: 0, scale: 0.9})
             });
 
         });
