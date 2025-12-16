@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Noto+Serif+Thai:wght@400;600;700&family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -30,7 +30,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Montserrat', sans-serif;
+            /* เพิ่ม Prompt สำหรับภาษาไทย */
+            font-family: 'Montserrat', 'Prompt', sans-serif;
             background-color: var(--bg-primary);
             color: var(--text-main);
             line-height: 1.8;
@@ -41,7 +42,11 @@
 
         body.loaded { opacity: 1; visibility: visible; transition: opacity 0.5s; }
 
-        h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; text-transform: uppercase; }
+        /* เพิ่ม Noto Serif Thai สำหรับหัวข้อภาษาไทย */
+        h1, h2, h3 { 
+            font-family: 'Cormorant Garamond', 'Noto Serif Thai', serif; 
+            font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; text-transform: uppercase; 
+        }
         
         .script-font {
             font-family: 'Allura', cursive; text-transform: none; font-weight: 400; font-size: 3rem;
@@ -51,11 +56,11 @@
         .container { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
         .section-padding { padding: var(--spacing-section) 0; }
         
-        /* UI Elements */
         .btn {
             display: inline-block; padding: 16px 40px; background-color: var(--accent-green); color: #fff !important;
             text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; text-decoration: none;
             transition: all 0.3s ease; border: 1px solid var(--accent-green); cursor: pointer; font-weight: 500;
+            font-family: 'Montserrat', 'Prompt', sans-serif;
         }
         .btn:hover { background-color: var(--text-main); border-color: var(--text-main); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
 
@@ -63,91 +68,77 @@
         .section-header h2 { font-size: 3.5rem; color: var(--text-main); margin-bottom: 20px; }
         .header-divider { width: 1px; height: 60px; background: var(--text-gold); margin: 0 auto 20px; opacity: 0.5; }
 
-        /* Navigation */
+        /* Navigation & Language Switcher */
         nav {
-            position: fixed; top: 0; width: 100%; padding: 25px 0;
+            position: fixed; top: 0; width: 100%; padding: 20px 0;
             background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 100%);
             z-index: 1000; transition: all 0.5s ease;
         }
         nav.scrolled {
             background: rgba(253, 251, 247, 0.95);
             backdrop-filter: blur(10px);
-            padding: 15px 0;
+            padding: 10px 0;
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
 
         .nav-container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.6rem; font-family: 'Cormorant Garamond'; font-weight: 700; letter-spacing: 3px; color: #fff; transition: 0.5s; }
-        .nav-links { display: flex; gap: 30px; list-style: none; align-items: center; }
-        .nav-links a { text-decoration: none; color: #fff; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500; transition: 0.3s; }
+        
+        .nav-right { display: flex; align-items: center; gap: 30px; }
+        .nav-links { display: flex; gap: 25px; list-style: none; align-items: center; padding: 0; margin: 0; }
+        .nav-links a { text-decoration: none; color: #fff; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500; transition: 0.3s; font-family: 'Montserrat', 'Prompt', sans-serif;}
         .nav-links a:hover { color: var(--text-gold); }
         
         nav.scrolled .logo, nav.scrolled .nav-links a { color: var(--text-main); }
         nav.scrolled .nav-links a:hover { color: var(--accent-green); }
-        .nav-btn-highlight { background-color: #fff; color: var(--text-main) !important; padding: 12px 30px; transition: 0.3s;}
+        .nav-btn-highlight { background-color: #fff; color: var(--text-main) !important; padding: 10px 25px; transition: 0.3s;}
         nav.scrolled .nav-btn-highlight { background-color: var(--accent-green); color: #fff !important; }
 
-        /* --- PINNED WRAPPER & HERO --- */
-        .pinned-wrapper {
-            width: 100%;
-            height: 100vh;
-            position: relative;
-            overflow: hidden;
+        /* Language Switcher CSS */
+        .lang-switcher { display: flex; gap: 10px; align-items: center; margin-left: 20px; }
+        .lang-btn {
+            background: none; border: none; cursor: pointer; padding: 0; transition: transform 0.2s; opacity: 0.7;
         }
+        .lang-btn:hover, .lang-btn.active { opacity: 1; transform: scale(1.1); }
+        .lang-btn img { width: 24px; height: 24px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid transparent; }
+        .lang-btn.active img { border-color: #fff; }
+        nav.scrolled .lang-btn.active img { border-color: var(--accent-green); }
 
+        /* Hero */
+        .pinned-wrapper { width: 100%; height: 100vh; position: relative; overflow: hidden; }
         #home {
-            height: 100vh; 
-            width: 100%;
-            position: absolute; top: 0; left: 0;
-            display: flex; align-items: center; justify-content: center; text-align: center; 
-            z-index: 1;
+            height: 100vh; width: 100%; position: absolute; top: 0; left: 0;
+            display: flex; align-items: center; justify-content: center; text-align: center; z-index: 1;
         }
         .hero-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070') center/cover no-repeat;
             z-index: 1; will-change: transform;
         }
-        .hero-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.2); z-index: 2;
-        }
-        
-        /* The White Transition Overlay (แทนที่ Portal) */
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); z-index: 2; }
         .hero-white-transition {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #FFFFFF; /* สีขาวล้วน */
-            z-index: 3;
-            opacity: 0; /* ซ่อนไว้ก่อน */
-            pointer-events: none;
-            will-change: opacity;
+            background-color: #FFFFFF; z-index: 3; opacity: 0; pointer-events: none; will-change: opacity;
         }
-
         .hero-content { position: relative; z-index: 4; color: #fff; width: 100%; }
-        
         #hero-title { 
-            font-size: 6rem; margin-bottom: 20px; letter-spacing: 0.1em; 
-            text-shadow: 0 4px 30px rgba(0,0,0,0.3);
+            font-size: 6rem; margin-bottom: 20px; letter-spacing: 0.1em; text-shadow: 0 4px 30px rgba(0,0,0,0.3);
             will-change: transform, opacity; transform-origin: center center;
         }
         #hero-subtitle, .hero-btn-wrapper { will-change: opacity; }
 
-        /* --- OVERVIEW (Fade In) --- */
+        /* Overview */
         #overview {
-            height: 100vh;
-            width: 100%;
-            position: absolute; top: 0; left: 0;
-            z-index: 5;
-            background-color: var(--bg-primary); /* พื้นหลังทึบของ Section 2 */
-            display: flex; align-items: center;
-            opacity: 0; /* เริ่มต้นซ่อน */
-            visibility: hidden;
+            height: 100vh; width: 100%; position: absolute; top: 0; left: 0; z-index: 5;
+            background-color: var(--bg-primary); display: flex; align-items: center;
+            opacity: 0; visibility: hidden;
         }
         .split-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; }
         .img-stack { position: relative; }
         .img-main { width: 100%; height: 600px; object-fit: cover; border-radius: 4px; }
         .img-offset { position: absolute; bottom: -40px; left: -40px; width: 250px; height: 300px; object-fit: cover; border: 10px solid var(--bg-primary); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
 
-        /* Villa Types */
+        /* Other Sections */
         .villa-header-container { padding: 160px 0 80px; text-align: center; background: var(--bg-sand); }
         #villa-types { background-color: var(--bg-sand); }
         .villa-item { display: grid; grid-template-columns: 1fr 1fr; gap: 0; background: #fff; margin-bottom: 0; min-height: 600px; overflow: hidden; }
@@ -162,7 +153,6 @@
         .feature-point { font-size: 0.85rem; display: flex; align-items: center; color: var(--text-main); }
         .feature-point i { color: var(--text-gold); margin-right: 10px; font-size: 0.8rem; }
 
-        /* Gallery */
         #gallery { background: #fff; }
         .gallery-masonry { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 300px; gap: 15px; }
         .g-item { position: relative; overflow: hidden; cursor: pointer; opacity: 0; }
@@ -172,34 +162,30 @@
         .g-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; text-align: center; opacity: 0; transition: 0.3s; z-index: 2; pointer-events: none; }
         .g-item:hover .g-overlay { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
 
-        /* Facilities */
         #facilities { background-color: var(--bg-primary); }
         .facilities-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 40px; }
         .facility-box { text-align: center; padding: 40px 20px; border: 1px solid rgba(0,0,0,0.05); background: #fff; }
         .facility-box:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.05); }
         .facility-box i { font-size: 2.5rem; color: var(--text-gold); margin-bottom: 20px; }
-        .facility-box h4 { font-family: 'Cormorant Garamond'; letter-spacing: 1px; font-weight: 600; font-size: 1.2rem; }
+        .facility-box h4 { font-family: 'Cormorant Garamond', 'Noto Serif Thai', serif; letter-spacing: 1px; font-weight: 600; font-size: 1.2rem; }
 
-        /* Reviews */
         #reviews { background: var(--bg-sand); text-align: center; }
         .review-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 50px; }
         .review-card { padding: 40px; background: #fff; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 10px 30px rgba(0,0,0,0.02); position: relative; }
         .review-card::before { content: '“'; font-family: 'Playfair Display', serif; font-size: 5rem; color: var(--bg-sand); position: absolute; top: 10px; left: 20px; }
         .stars { color: #D4AF37; margin-bottom: 15px; font-size: 0.8rem; }
-        .review-text { font-style: italic; color: var(--text-main); margin-bottom: 20px; font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+        .review-text { font-style: italic; color: var(--text-main); margin-bottom: 20px; font-family: 'Playfair Display', 'Prompt', serif; font-size: 1.1rem; }
         .reviewer { font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; color: var(--accent-green); text-transform: uppercase; }
 
-        /* Journal */
         #journal { background: #fff; }
         .journal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
         .article-card { background: transparent; }
         .article-img { width: 100%; height: 300px; object-fit: cover; margin-bottom: 20px; border-radius: 4px; }
         .article-meta { font-size: 0.75rem; color: var(--text-gold); margin-bottom: 10px; letter-spacing: 1px; }
-        .article-title { font-family: 'Cormorant Garamond'; font-size: 1.8rem; margin-bottom: 15px; line-height: 1.2; }
+        .article-title { font-family: 'Cormorant Garamond', 'Noto Serif Thai', serif; font-size: 1.8rem; margin-bottom: 15px; line-height: 1.2; }
         .read-more { font-size: 0.8rem; text-decoration: none; color: var(--text-main); border-bottom: 1px solid var(--text-main); padding-bottom: 3px; transition: 0.3s; }
         .article-card:hover .read-more { color: var(--accent-green); border-color: var(--accent-green); }
 
-        /* Location */
         #location { padding: 0; background: #fff; }
         .location-wrapper { position: relative; height: 600px; }
         .location-card {
@@ -211,15 +197,13 @@
         .loc-list li { list-style: none; margin-bottom: 15px; display: flex; align-items: center; color: var(--text-muted); }
         .loc-list li i { color: var(--accent-green); margin-right: 15px; width: 20px; text-align: center; }
 
-        /* Contact Form */
         #contact { background: var(--bg-sand); }
         .contact-container { max-width: 800px; margin: 0 auto; background: #fff; padding: 60px; box-shadow: 0 20px 50px rgba(0,0,0,0.05); }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-        .form-control { width: 100%; padding: 15px; border: 1px solid #ddd; font-family: 'Montserrat'; background: var(--bg-primary); transition: 0.3s; }
+        .form-control { width: 100%; padding: 15px; border: 1px solid #ddd; font-family: 'Montserrat', 'Prompt', sans-serif; background: var(--bg-primary); transition: 0.3s; }
         .form-control:focus { outline: none; border-color: var(--accent-green); background: #fff; }
         textarea.form-control { height: 150px; resize: none; margin-bottom: 30px; }
 
-        /* Footer */
         footer { background: var(--accent-dark); color: #E0E0E0; padding: 80px 0; text-align: center; font-size: 0.9rem; }
         .footer-logo { font-family: 'Cormorant Garamond'; font-size: 2.5rem; color: #fff; display: block; margin-bottom: 30px; }
         .footer-contact p { color: #ccc; margin-bottom: 10px; }
@@ -245,28 +229,38 @@
     <nav id="navbar">
         <div class="container nav-container">
             <div class="logo">SONATA SANDS</div>
-            <ul class="nav-links">
-                <li><a href="#overview">Overview</a></li>
-                <li><a href="#villa-types">Villas</a></li>
-                <li><a href="#gallery">Gallery</a></li>
-                <li><a href="#facilities">Lifestyle</a></li>
-                <li><a href="#reviews">Reviews</a></li>
-                <li><a href="#location">Location</a></li>
-                <li><a href="#contact" class="nav-btn-highlight">Book Now</a></li>
-            </ul>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="#overview" data-i18n="nav_overview">Overview</a></li>
+                    <li><a href="#villa-types" data-i18n="nav_villas">Villas</a></li>
+                    <li><a href="#gallery" data-i18n="nav_gallery">Gallery</a></li>
+                    <li><a href="#facilities" data-i18n="nav_lifestyle">Lifestyle</a></li>
+                    <li><a href="#reviews" data-i18n="nav_reviews">Reviews</a></li>
+                    <li><a href="#location" data-i18n="nav_location">Location</a></li>
+                    <li><a href="#contact" class="nav-btn-highlight" data-i18n="nav_book">Book Now</a></li>
+                </ul>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" onclick="setLanguage('en')">
+                        <img src="https://flagcdn.com/w40/gb.png" alt="English">
+                    </button>
+                    <button class="lang-btn" onclick="setLanguage('th')">
+                        <img src="https://flagcdn.com/w40/th.png" alt="Thai">
+                    </button>
+                </div>
+            </div>
         </div>
     </nav>
 
     <div class="pinned-wrapper" id="pinned-wrapper">
-        
         <section id="home">
             <div class="hero-bg"></div>
             <div class="hero-overlay"></div>
-            <div class="hero-white-transition"></div> <div class="hero-content container">
-                <span class="script-font" id="hero-subtitle" style="color: #fff; font-size: 4rem;">Exhale Into Paradise</span>
+            <div class="hero-white-transition"></div>
+            <div class="hero-content container">
+                <span class="script-font" id="hero-subtitle" data-i18n="hero_subtitle" style="color: #fff; font-size: 4rem;">Exhale Into Paradise</span>
                 <h1 id="hero-title">SONATA SANDS</h1>
                 <div class="hero-btn-wrapper">
-                    <a href="#villa-types" class="btn" style="background: #fff; color: var(--text-main) !important;">Discover The Villas</a>
+                    <a href="#villa-types" class="btn" style="background: #fff; color: var(--text-main) !important;" data-i18n="hero_btn">Discover The Villas</a>
                 </div>
             </div>
         </section>
@@ -274,29 +268,27 @@
         <section id="overview" class="section-padding">
             <div class="container split-layout">
                 <div class="text-block">
-                    <span class="script-font">Welcome to</span>
-                    <h2>MODERN COASTAL<br>SANCTUARY</h2>
+                    <span class="script-font" data-i18n="overview_welcome">Welcome to</span>
+                    <h2 data-i18n="overview_title">MODERN COASTAL<br>SANCTUARY</h2>
                     <div class="header-divider"></div>
-                    <p style="color: var(--text-muted); margin-bottom: 20px;">Experience the perfect blend of luxury and nature. Our villas are designed with a 'Sand Tone' palette, warm whites, and palm greens to create a soothing atmosphere for your soul.</p>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;" data-i18n="overview_desc">Experience the perfect blend of luxury and nature. Our villas are designed with a 'Sand Tone' palette, warm whites, and palm greens to create a soothing atmosphere for your soul.</p>
                     <div style="margin-top: 40px;">
                         <span style="font-family: 'Allura'; font-size: 2.5rem; color: var(--accent-green);">Npm Properties</span>
-                        <p style="font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;">Developer Signature</p>
+                        <p style="font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;" data-i18n="overview_dev">Developer Signature</p>
                     </div>
                 </div>
-                
                 <div class="img-stack">
                     <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1974" class="img-main" alt="Villa Interior">
                     <img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=2070" class="img-offset" alt="Pool Detail">
                 </div>
             </div>
         </section>
-
     </div>
 
     <section id="villa-types">
         <div class="villa-header-container gsap-fade-up">
-            <span class="script-font">Accommodation</span>
-            <h2>VILLA TYPES</h2>
+            <span class="script-font" data-i18n="villa_subtitle">Accommodation</span>
+            <h2 data-i18n="villa_title">VILLA TYPES</h2>
             <div class="header-divider"></div>
         </div>
 
@@ -305,16 +297,16 @@
                 <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=1974" alt="2 Bedroom Villa">
             </div>
             <div class="villa-content gsap-slide-left">
-                <span class="villa-tag">For Couples</span>
-                <h3>THE SERENITY (2 BED)</h3>
-                <p class="villa-desc">An intimate sanctuary designed for romance and privacy. The Serenity Villa features a seamless flow between the master suite and the private plunge pool.</p>
+                <span class="villa-tag" data-i18n="villa1_tag">For Couples</span>
+                <h3 data-i18n="villa1_name">THE SERENITY (2 BED)</h3>
+                <p class="villa-desc" data-i18n="villa1_desc">An intimate sanctuary designed for romance and privacy. The Serenity Villa features a seamless flow between the master suite and the private plunge pool.</p>
                 <div class="villa-features">
-                    <span class="feature-point"><i class="fas fa-bed"></i> 2 King Bedrooms</span>
-                    <span class="feature-point"><i class="fas fa-water"></i> Plunge Pool</span>
-                    <span class="feature-point"><i class="fas fa-ruler-combined"></i> 180 Sqm.</span>
-                    <span class="feature-point"><i class="fas fa-tree"></i> Garden View</span>
+                    <span class="feature-point" data-i18n="villa1_feat1"><i class="fas fa-bed"></i> 2 King Bedrooms</span>
+                    <span class="feature-point" data-i18n="villa1_feat2"><i class="fas fa-water"></i> Plunge Pool</span>
+                    <span class="feature-point" data-i18n="villa1_feat3"><i class="fas fa-ruler-combined"></i> 180 Sqm.</span>
+                    <span class="feature-point" data-i18n="villa1_feat4"><i class="fas fa-tree"></i> Garden View</span>
                 </div>
-                <div><a href="#contact" class="btn">View Details</a></div>
+                <div><a href="#contact" class="btn" data-i18n="view_details">View Details</a></div>
             </div>
         </div>
 
@@ -323,16 +315,16 @@
                 <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053" alt="3-4 Bedroom Villa">
             </div>
             <div class="villa-content gsap-slide-right">
-                <span class="villa-tag">For Families</span>
-                <h3>THE GRAND HORIZON (3-4 BED)</h3>
-                <p class="villa-desc">Defined by space and light, this residence is the ultimate setting for family gatherings. Featuring a double-height living area and western kitchen.</p>
+                <span class="villa-tag" data-i18n="villa2_tag">For Families</span>
+                <h3 data-i18n="villa2_name">THE GRAND HORIZON (3-4 BED)</h3>
+                <p class="villa-desc" data-i18n="villa2_desc">Defined by space and light, this residence is the ultimate setting for family gatherings. Featuring a double-height living area and western kitchen.</p>
                 <div class="villa-features">
-                    <span class="feature-point"><i class="fas fa-bed"></i> 3-4 Bedrooms</span>
-                    <span class="feature-point"><i class="fas fa-infinity"></i> Infinity Pool</span>
-                    <span class="feature-point"><i class="fas fa-ruler-combined"></i> 320 Sqm.</span>
-                    <span class="feature-point"><i class="fas fa-utensils"></i> Western Kitchen</span>
+                    <span class="feature-point" data-i18n="villa2_feat1"><i class="fas fa-bed"></i> 3-4 Bedrooms</span>
+                    <span class="feature-point" data-i18n="villa2_feat2"><i class="fas fa-infinity"></i> Infinity Pool</span>
+                    <span class="feature-point" data-i18n="villa2_feat3"><i class="fas fa-ruler-combined"></i> 320 Sqm.</span>
+                    <span class="feature-point" data-i18n="villa2_feat4"><i class="fas fa-utensils"></i> Western Kitchen</span>
                 </div>
-                <div><a href="#contact" class="btn">View Details</a></div>
+                <div><a href="#contact" class="btn" data-i18n="view_details">View Details</a></div>
             </div>
         </div>
     </section>
@@ -340,8 +332,8 @@
     <section id="gallery" class="section-padding">
         <div class="container">
             <div class="section-header gsap-fade-up">
-                <span class="script-font">Visual Journey</span>
-                <h2>THE GALLERY</h2>
+                <span class="script-font" data-i18n="gallery_subtitle">Visual Journey</span>
+                <h2 data-i18n="gallery_title">THE GALLERY</h2>
                 <div class="header-divider"></div>
             </div>
             <div class="gallery-masonry">
@@ -349,27 +341,27 @@
                     <video autoplay muted loop playsinline>
                         <source src="https://www.pexels.com/download/video/33022497/" type="video/mp4">
                     </video>
-                    <div class="g-overlay"><h3>Cinematic Experience</h3></div>
+                    <div class="g-overlay"><h3 data-i18n="gal_cinematic">Cinematic Experience</h3></div>
                 </div>
                 <div class="g-item gsap-pop">
                     <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070" alt="Exterior">
-                    <div class="g-overlay"><h5>Architecture</h5></div>
+                    <div class="g-overlay"><h5 data-i18n="gal_arch">Architecture</h5></div>
                 </div>
                 <div class="g-item gsap-pop">
                     <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=2070" alt="Living">
-                    <div class="g-overlay"><h5>Interiors</h5></div>
+                    <div class="g-overlay"><h5 data-i18n="gal_interiors">Interiors</h5></div>
                 </div>
                 <div class="g-item g-wide gsap-pop">
                     <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=2000" alt="Bedroom Detail">
-                    <div class="g-overlay"><h5>Master Suite</h5></div>
+                    <div class="g-overlay"><h5 data-i18n="gal_suite">Master Suite</h5></div>
                 </div>
                 <div class="g-item g-wide gsap-pop">
                     <img src="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?q=80&w=1974" alt="Bath">
-                    <div class="g-overlay"><h5>Spa Bath</h5></div>
+                    <div class="g-overlay"><h5 data-i18n="gal_spa">Spa Bath</h5></div>
                 </div>
                 <div class="g-item g-wide gsap-pop">
                     <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073" alt="Nature">
-                    <div class="g-overlay"><h5>Nature</h5></div>
+                    <div class="g-overlay"><h5 data-i18n="gal_nature">Nature</h5></div>
                 </div>
             </div>
         </div>
@@ -378,15 +370,15 @@
     <section id="facilities" class="section-padding">
         <div class="container">
             <div class="section-header gsap-fade-up">
-                <span class="script-font">Lifestyle</span>
-                <h2>CURATED FACILITIES</h2>
+                <span class="script-font" data-i18n="fac_subtitle">Lifestyle</span>
+                <h2 data-i18n="fac_title">CURATED FACILITIES</h2>
                 <div class="header-divider"></div>
             </div>
             <div class="facilities-grid">
-                <div class="facility-box gsap-stagger-up"><i class="fas fa-concierge-bell"></i><h4>24/7 Concierge</h4></div>
-                <div class="facility-box gsap-stagger-up"><i class="fas fa-swimming-pool"></i><h4>Saltwater System</h4></div>
-                <div class="facility-box gsap-stagger-up"><i class="fas fa-shield-alt"></i><h4>Smart Security</h4></div>
-                <div class="facility-box gsap-stagger-up"><i class="fas fa-spa"></i><h4>In-Villa Spa</h4></div>
+                <div class="facility-box gsap-stagger-up"><i class="fas fa-concierge-bell"></i><h4 data-i18n="fac_1">24/7 Concierge</h4></div>
+                <div class="facility-box gsap-stagger-up"><i class="fas fa-swimming-pool"></i><h4 data-i18n="fac_2">Saltwater System</h4></div>
+                <div class="facility-box gsap-stagger-up"><i class="fas fa-shield-alt"></i><h4 data-i18n="fac_3">Smart Security</h4></div>
+                <div class="facility-box gsap-stagger-up"><i class="fas fa-spa"></i><h4 data-i18n="fac_4">In-Villa Spa</h4></div>
             </div>
         </div>
     </section>
@@ -394,24 +386,24 @@
     <section id="reviews" class="section-padding">
         <div class="container">
             <div class="section-header gsap-fade-up">
-                <span class="script-font">Guest Experiences</span>
-                <h2>WHAT THEY SAY</h2>
+                <span class="script-font" data-i18n="rev_subtitle">Guest Experiences</span>
+                <h2 data-i18n="rev_title">WHAT THEY SAY</h2>
                 <div class="header-divider"></div>
             </div>
             <div class="review-grid">
                 <div class="review-card gsap-stagger-up">
                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="review-text">"The most peaceful vacation we've ever had. The Sand Tone design really calms the mind."</p>
+                    <p class="review-text" data-i18n="rev_1_text">"The most peaceful vacation we've ever had. The Sand Tone design really calms the mind."</p>
                     <span class="reviewer">SARAH & JAMES, UK</span>
                 </div>
                 <div class="review-card gsap-stagger-up">
                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="review-text">"Exceptional service and the villa layout was perfect for our large family. Highly recommended."</p>
+                    <p class="review-text" data-i18n="rev_2_text">"Exceptional service and the villa layout was perfect for our large family. Highly recommended."</p>
                     <span class="reviewer">THE WONG FAMILY, HK</span>
                 </div>
                 <div class="review-card gsap-stagger-up">
                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="review-text">"A hidden gem in Krabi. The attention to detail in the architecture is stunning."</p>
+                    <p class="review-text" data-i18n="rev_3_text">"A hidden gem in Krabi. The attention to detail in the architecture is stunning."</p>
                     <span class="reviewer">MARCUS D., GERMANY</span>
                 </div>
             </div>
@@ -421,28 +413,28 @@
     <section id="journal" class="section-padding">
         <div class="container">
             <div class="section-header gsap-fade-up">
-                <span class="script-font">Lifestyle</span>
-                <h2>THE JOURNAL</h2>
-                <p style="color:var(--text-muted); margin-top: 10px;">Stories of design, travel, and living.</p>
+                <span class="script-font" data-i18n="jou_subtitle">Lifestyle</span>
+                <h2 data-i18n="jou_title">THE JOURNAL</h2>
+                <p style="color:var(--text-muted); margin-top: 10px;" data-i18n="jou_desc">Stories of design, travel, and living.</p>
             </div>
             <div class="journal-grid">
                 <article class="article-card gsap-stagger-up">
                     <img src="https://images.unsplash.com/photo-1519451241324-20b4ea2c4220?q=80&w=2070" class="article-img" alt="Design">
                     <div class="article-meta">DESIGN • DEC 12, 2025</div>
-                    <h3 class="article-title">Why 'Sand Tone' is the Future of Tropical Architecture</h3>
-                    <a href="#" class="read-more">Read Story</a>
+                    <h3 class="article-title" data-i18n="jou_1_title">Why 'Sand Tone' is the Future of Tropical Architecture</h3>
+                    <a href="#" class="read-more" data-i18n="read_story">Read Story</a>
                 </article>
                 <article class="article-card gsap-stagger-up">
                     <img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=80&w=2039" class="article-img" alt="Krabi">
                     <div class="article-meta">TRAVEL • NOV 28, 2025</div>
-                    <h3 class="article-title">Top 5 Hidden Beaches in Krabi You Must Visit</h3>
-                    <a href="#" class="read-more">Read Story</a>
+                    <h3 class="article-title" data-i18n="jou_2_title">Top 5 Hidden Beaches in Krabi You Must Visit</h3>
+                    <a href="#" class="read-more" data-i18n="read_story">Read Story</a>
                 </article>
                 <article class="article-card gsap-stagger-up">
                     <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1974" class="article-img" alt="Food">
                     <div class="article-meta">LIFESTYLE • NOV 15, 2025</div>
-                    <h3 class="article-title">A Guide to Southern Thai Fine Dining Experiences</h3>
-                    <a href="#" class="read-more">Read Story</a>
+                    <h3 class="article-title" data-i18n="jou_3_title">A Guide to Southern Thai Fine Dining Experiences</h3>
+                    <a href="#" class="read-more" data-i18n="read_story">Read Story</a>
                 </article>
             </div>
         </div>
@@ -452,15 +444,15 @@
         <div class="location-wrapper">
             <iframe class="map-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31919.16687126868!2d98.810565!3d8.030653!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3051943896c21e79%3A0x40223bc2c382340!2sAo%20Nang%2C%20Mueang%20Krabi%20District%2C%20Krabi!5e0!3m2!1sen!2sth!4v1700000000000!5m2!1sen!2sth" allowfullscreen="" loading="lazy"></iframe>
             <div class="location-card">
-                <span class="script-font" style="font-size: 2rem; color: var(--accent-green);">Destination</span>
-                <h3>KRABI & SAMUI</h3>
-                <p style="margin-bottom: 20px; color: var(--text-muted);">Situated in the most prestigious zone, offering both seclusion and connectivity.</p>
+                <span class="script-font" style="font-size: 2rem; color: var(--accent-green);" data-i18n="loc_dest">Destination</span>
+                <h3 data-i18n="loc_title">KRABI & SAMUI</h3>
+                <p style="margin-bottom: 20px; color: var(--text-muted);" data-i18n="loc_desc">Situated in the most prestigious zone, offering both seclusion and connectivity.</p>
                 <ul class="loc-list">
-                    <li><i class="fas fa-umbrella-beach"></i> 5 Mins to Private Beach</li>
-                    <li><i class="fas fa-plane"></i> 20 Mins to International Airport</li>
-                    <li><i class="fas fa-shopping-bag"></i> 10 Mins to Lifestyle Mall</li>
+                    <li data-i18n="loc_1"><i class="fas fa-umbrella-beach"></i> 5 Mins to Private Beach</li>
+                    <li data-i18n="loc_2"><i class="fas fa-plane"></i> 20 Mins to International Airport</li>
+                    <li data-i18n="loc_3"><i class="fas fa-shopping-bag"></i> 10 Mins to Lifestyle Mall</li>
                 </ul>
-                <a href="#" class="btn-outline" style="border-bottom: 1px solid #333; color: #333; text-decoration: none; font-size: 0.8rem;">GET DIRECTIONS</a>
+                <a href="#" class="btn-outline" style="border-bottom: 1px solid #333; color: #333; text-decoration: none; font-size: 0.8rem;" data-i18n="get_directions">GET DIRECTIONS</a>
             </div>
         </div>
     </section>
@@ -468,28 +460,28 @@
     <section id="contact" class="section-padding gsap-fade-up">
         <div class="container">
             <div class="section-header">
-                <span class="script-font">Reserve Your Sanctuary</span>
-                <h2>GET IN TOUCH</h2>
+                <span class="script-font" data-i18n="contact_subtitle">Reserve Your Sanctuary</span>
+                <h2 data-i18n="contact_title">GET IN TOUCH</h2>
                 <div class="header-divider"></div>
             </div>
             
             <div class="contact-container">
                 <form>
                     <div class="form-row">
-                        <input type="text" class="form-control" placeholder="Your Name" required>
-                        <input type="email" class="form-control" placeholder="Email Address" required>
+                        <input type="text" class="form-control" data-placeholder="name_ph" placeholder="Your Name" required>
+                        <input type="email" class="form-control" data-placeholder="email_ph" placeholder="Email Address" required>
                     </div>
                     <div class="form-row">
-                        <input type="tel" class="form-control" placeholder="Phone Number">
+                        <input type="tel" class="form-control" data-placeholder="phone_ph" placeholder="Phone Number">
                         <select class="form-control">
-                            <option>Interested in: 2 Bedroom Villa</option>
-                            <option>Interested in: 3-4 Bedroom Villa</option>
-                            <option>General Inquiry</option>
+                            <option data-i18n="opt_1">Interested in: 2 Bedroom Villa</option>
+                            <option data-i18n="opt_2">Interested in: 3-4 Bedroom Villa</option>
+                            <option data-i18n="opt_3">General Inquiry</option>
                         </select>
                     </div>
-                    <textarea class="form-control" placeholder="Your Message"></textarea>
+                    <textarea class="form-control" data-placeholder="msg_ph" placeholder="Your Message"></textarea>
                     <div style="text-align: center;">
-                        <button type="submit" class="btn">Send Enquiry</button>
+                        <button type="submit" class="btn" data-i18n="send_btn">Send Enquiry</button>
                     </div>
                 </form>
             </div>
@@ -500,7 +492,7 @@
         <div class="container">
             <span class="footer-logo">SONATA SANDS</span>
             <div class="footer-contact">
-                <p>123 Beach Road, Krabi, Thailand</p>
+                <p data-i18n="footer_addr">123 Beach Road, Krabi, Thailand</p>
                 <p>+66 81 234 5678 | hello@sonatasands.com</p>
             </div>
             <div class="footer-social" style="margin: 30px 0;">
@@ -513,12 +505,96 @@
     </footer>
 
     <script>
+        // --- TRANSLATION DATA ---
+        const translations = {
+            en: {
+                nav_overview: "Overview", nav_villas: "Villas", nav_gallery: "Gallery", nav_lifestyle: "Lifestyle", nav_reviews: "Reviews", nav_location: "Location", nav_book: "Book Now",
+                hero_subtitle: "Exhale Into Paradise", hero_btn: "Discover The Villas",
+                overview_welcome: "Welcome to", overview_title: "MODERN COASTAL<br>SANCTUARY", overview_desc: "Experience the perfect blend of luxury and nature. Our villas are designed with a 'Sand Tone' palette, warm whites, and palm greens to create a soothing atmosphere for your soul.", overview_dev: "Developer Signature",
+                villa_subtitle: "Accommodation", villa_title: "VILLA TYPES",
+                villa1_tag: "For Couples", villa1_name: "THE SERENITY (2 BED)", villa1_desc: "An intimate sanctuary designed for romance and privacy. The Serenity Villa features a seamless flow between the master suite and the private plunge pool.",
+                villa1_feat1: '<i class="fas fa-bed"></i> 2 King Bedrooms', villa1_feat2: '<i class="fas fa-water"></i> Plunge Pool', villa1_feat3: '<i class="fas fa-ruler-combined"></i> 180 Sqm.', villa1_feat4: '<i class="fas fa-tree"></i> Garden View',
+                villa2_tag: "For Families", villa2_name: "THE GRAND HORIZON (3-4 BED)", villa2_desc: "Defined by space and light, this residence is the ultimate setting for family gatherings. Featuring a double-height living area and western kitchen.",
+                villa2_feat1: '<i class="fas fa-bed"></i> 3-4 Bedrooms', villa2_feat2: '<i class="fas fa-infinity"></i> Infinity Pool', villa2_feat3: '<i class="fas fa-ruler-combined"></i> 320 Sqm.', villa2_feat4: '<i class="fas fa-utensils"></i> Western Kitchen',
+                view_details: "View Details",
+                gallery_subtitle: "Visual Journey", gallery_title: "THE GALLERY",
+                gal_cinematic: "Cinematic Experience", gal_arch: "Architecture", gal_interiors: "Interiors", gal_suite: "Master Suite", gal_spa: "Spa Bath", gal_nature: "Nature",
+                fac_subtitle: "Lifestyle", fac_title: "CURATED FACILITIES",
+                fac_1: "24/7 Concierge", fac_2: "Saltwater System", fac_3: "Smart Security", fac_4: "In-Villa Spa",
+                rev_subtitle: "Guest Experiences", rev_title: "WHAT THEY SAY",
+                rev_1_text: "\"The most peaceful vacation we've ever had. The Sand Tone design really calms the mind.\"",
+                rev_2_text: "\"Exceptional service and the villa layout was perfect for our large family. Highly recommended.\"",
+                rev_3_text: "\"A hidden gem in Krabi. The attention to detail in the architecture is stunning.\"",
+                jou_subtitle: "Lifestyle", jou_title: "THE JOURNAL", jou_desc: "Stories of design, travel, and living.",
+                jou_1_title: "Why 'Sand Tone' is the Future of Tropical Architecture", jou_2_title: "Top 5 Hidden Beaches in Krabi You Must Visit", jou_3_title: "A Guide to Southern Thai Fine Dining Experiences", read_story: "Read Story",
+                loc_dest: "Destination", loc_title: "KRABI & SAMUI", loc_desc: "Situated in the most prestigious zone, offering both seclusion and connectivity.",
+                loc_1: '<i class="fas fa-umbrella-beach"></i> 5 Mins to Private Beach', loc_2: '<i class="fas fa-plane"></i> 20 Mins to International Airport', loc_3: '<i class="fas fa-shopping-bag"></i> 10 Mins to Lifestyle Mall', get_directions: "GET DIRECTIONS",
+                contact_subtitle: "Reserve Your Sanctuary", contact_title: "GET IN TOUCH",
+                name_ph: "Your Name", email_ph: "Email Address", phone_ph: "Phone Number", msg_ph: "Your Message", send_btn: "Send Enquiry",
+                opt_1: "Interested in: 2 Bedroom Villa", opt_2: "Interested in: 3-4 Bedroom Villa", opt_3: "General Inquiry",
+                footer_addr: "123 Beach Road, Krabi, Thailand"
+            },
+            th: {
+                nav_overview: "ภาพรวม", nav_villas: "วิลล่า", nav_gallery: "แกลเลอรี", nav_lifestyle: "ไลฟ์สไตล์", nav_reviews: "รีวิว", nav_location: "ทำเล", nav_book: "จองเลย",
+                hero_subtitle: "สูดกลิ่นอายแห่งสวรรค์", hero_btn: "ค้นพบวิลล่าของเรา",
+                overview_welcome: "ยินดีต้อนรับสู่", overview_title: "ที่พักตากอากาศริมทะเล<br>สไตล์โมเดิร์น", overview_desc: "สัมผัสความผสมผสานที่ลงตัวระหว่างความหรูหราและธรรมชาติ วิลล่าของเราออกแบบด้วยโทนสี 'Sand Tone' สีขาวนวลและสีเขียวปาล์ม เพื่อสร้างบรรยากาศที่ผ่อนคลายอย่างแท้จริง", overview_dev: "ลายเซ็นผู้พัฒนาโครงการ",
+                villa_subtitle: "ที่พัก", villa_title: "ประเภทวิลล่า",
+                villa1_tag: "สำหรับคู่รัก", villa1_name: "เดอะ เซเรนิตี้ (2 ห้องนอน)", villa1_desc: "สวรรค์ส่วนตัวที่ออกแบบมาเพื่อความโรแมนติกและความเป็นส่วนตัว วิลล่านี้เชื่อมต่อห้องนอนหลักกับสระน้ำส่วนตัวได้อย่างลงตัว ท่ามกลางสวนเขตร้อน",
+                villa1_feat1: '<i class="fas fa-bed"></i> 2 ห้องนอนคิงไซส์', villa1_feat2: '<i class="fas fa-water"></i> สระน้ำส่วนตัว', villa1_feat3: '<i class="fas fa-ruler-combined"></i> 180 ตร.ม.', villa1_feat4: '<i class="fas fa-tree"></i> วิวสวน',
+                villa2_tag: "สำหรับครอบครัว", villa2_name: "เดอะ แกรนด์ ฮอไรซอน (3-4 ห้องนอน)", villa2_desc: "โดดเด่นด้วยพื้นที่และแสงธรรมชาติ เหมาะสำหรับการรวมตัวของครอบครัว มีโถงนั่งเล่นเพดานสูงและครัวตะวันตกครบครัน",
+                villa2_feat1: '<i class="fas fa-bed"></i> 3-4 ห้องนอน', villa2_feat2: '<i class="fas fa-infinity"></i> สระว่ายน้ำไร้ขอบ', villa2_feat3: '<i class="fas fa-ruler-combined"></i> 320 ตร.ม.', villa2_feat4: '<i class="fas fa-utensils"></i> ครัวตะวันตก',
+                view_details: "ดูรายละเอียด",
+                gallery_subtitle: "การเดินทางผ่านภาพ", gallery_title: "แกลเลอรี",
+                gal_cinematic: "ประสบการณ์เสมือนจริง", gal_arch: "สถาปัตยกรรม", gal_interiors: "การตกแต่งภายใน", gal_suite: "ห้องนอนมาสเตอร์", gal_spa: "สปาและห้องน้ำ", gal_nature: "ธรรมชาติ",
+                fac_subtitle: "ไลฟ์สไตล์", fac_title: "สิ่งอำนวยความสะดวก",
+                fac_1: "ผู้ช่วยส่วนตัว 24 ชม.", fac_2: "ระบบสระน้ำเกลือ", fac_3: "ระบบความปลอดภัยอัจฉริยะ", fac_4: "สปาในวิลล่า",
+                rev_subtitle: "ประสบการณ์ผู้เข้าพัก", rev_title: "เสียงตอบรับ",
+                rev_1_text: "\"เป็นการพักผ่อนที่เงียบสงบที่สุดที่เราเคยมี การออกแบบโทนสีทรายช่วยให้จิตใจสงบจริงๆ\"",
+                rev_2_text: "\"การบริการยอดเยี่ยมและการจัดวางผังวิลล่าเหมาะมากสำหรับครอบครัวใหญ่ของเรา แนะนำเลยครับ\"",
+                rev_3_text: "\"อัญมณีที่ซ่อนอยู่ในกระบี่ รายละเอียดสถาปัตยกรรมสวยงามน่าทึ่งมาก\"",
+                jou_subtitle: "ไลฟ์สไตล์", jou_title: "บทความ", jou_desc: "เรื่องราวของการออกแบบ การเดินทาง และการใช้ชีวิต",
+                jou_1_title: "ทำไม 'Sand Tone' ถึงเป็นอนาคตของสถาปัตยกรรมเขตร้อน", jou_2_title: "5 หาดลับในกระบี่ที่คุณต้องไปเยือน", jou_3_title: "คู่มือร้านอาหาร Fine Dining ภาคใต้", read_story: "อ่านต่อ",
+                loc_dest: "จุดหมายปลายทาง", loc_title: "กระบี่ & สมุย", loc_desc: "ตั้งอยู่ในโซนที่หรูหราที่สุด มอบความเป็นส่วนตัวและการเดินทางที่สะดวกสบาย",
+                loc_1: '<i class="fas fa-umbrella-beach"></i> 5 นาทีถึงหาดส่วนตัว', loc_2: '<i class="fas fa-plane"></i> 20 นาทีถึงสนามบินนานาชาติ', loc_3: '<i class="fas fa-shopping-bag"></i> 10 นาทีถึงไลฟ์สไตล์มอลล์', get_directions: "รับเส้นทาง",
+                contact_subtitle: "จองพื้นที่พักผ่อนของคุณ", contact_title: "ติดต่อเรา",
+                name_ph: "ชื่อของคุณ", email_ph: "อีเมล", phone_ph: "เบอร์โทรศัพท์", msg_ph: "ข้อความของคุณ", send_btn: "ส่งข้อความ",
+                opt_1: "สนใจ: วิลล่า 2 ห้องนอน", opt_2: "สนใจ: วิลล่า 3-4 ห้องนอน", opt_3: "สอบถามทั่วไป",
+                footer_addr: "123 ถนนเลียบชายหาด, กระบี่, ประเทศไทย"
+            }
+        };
+
+        function setLanguage(lang) {
+            // 1. Update Texts
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key]; // Use innerHTML to allow tags inside text
+                }
+            });
+
+            // 2. Update Placeholders
+            document.querySelectorAll('[data-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-placeholder');
+                if (translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
+                }
+            });
+
+            // 3. Toggle Active Class on Flags
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            // Find button with correct image alt and add active
+            const btns = document.querySelectorAll('.lang-btn');
+            if(lang === 'en') btns[0].classList.add('active');
+            else btns[1].classList.add('active');
+        }
+
+        // --- ANIMATIONS ---
         window.addEventListener("load", () => {
             document.body.classList.add("loaded");
             
             gsap.registerPlugin(ScrollTrigger);
 
-            // --- 1. HERO SEQUENCE (Zoom through Text -> White Flash -> Fade In Next) ---
+            // 1. HERO SEQUENCE (Updated with white fade)
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: "#pinned-wrapper",
@@ -530,72 +606,48 @@
                 }
             });
 
-            // Step 1: ซูมตัวหนังสือทะลุจอ (Scale 150 เท่า)
             tl.to("#hero-title", {
                 scale: 150, 
                 duration: 2,
                 ease: "power2.inOut"
             })
-            // Step 2: แสงขาว (White Fade Overlay) ค่อยๆ ปรากฏขึ้นตอนซูมใกล้สุด
-            // สีขาว (#FFFFFF) จะกลืนกับตัวหนังสือที่เป็นสีขาวพอดี
             .to(".hero-white-transition", {
                 opacity: 1,
                 duration: 1,
                 ease: "power1.in"
-            }, "-=1") // เริ่มเฟดเข้ามาก่อนซูมจบ 1 วินาที
-            
-            // Step 3: Fade Section 2 (Overview) ขึ้นมาทับสีขาวอย่างนุ่มนวล
+            }, "-=1") 
             .to("#overview", {
                 autoAlpha: 1, 
                 duration: 1,
                 ease: "power1.inOut"
-            }, "-=0.5"); // Fade เข้ามาต่อเนื่องกัน
+            }, "-=0.5"); 
 
-
-            // --- 2. NAVBAR TRIGGER (Changed to match Transition) ---
-            // Navbar เปลี่ยนสีเมื่อ Timeline เล่นจบ (เข้าสู่ Overview เต็มตัว)
+            // 2. NAVBAR TRIGGER
             ScrollTrigger.create({
                 trigger: "#pinned-wrapper",
-                start: "bottom bottom", // เมื่อสิ้นสุดการ Pin (เข้าสู่หน้าปกติ)
+                start: "bottom bottom",
                 onEnter: () => document.getElementById("navbar").classList.add("scrolled"),
                 onLeaveBack: () => document.getElementById("navbar").classList.remove("scrolled")
             });
 
-
-            // --- 3. UNIVERSAL FADE UP ---
+            // 3. UNIVERSAL FADE UP
             const fadeUpElements = document.querySelectorAll('.gsap-fade-up');
             fadeUpElements.forEach(elem => {
                 gsap.fromTo(elem, 
                     { y: 60, opacity: 0 },
-                    {
-                        y: 0, opacity: 1, duration: 1.2, ease: "power3.out",
-                        delay: elem.dataset.delay || 0,
-                        scrollTrigger: {
-                            trigger: elem,
-                            start: "top 75%",
-                            toggleActions: "play reverse play reverse"
-                        }
-                    }
+                    { y: 0, opacity: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: elem, start: "top 75%", toggleActions: "play reverse play reverse" } }
                 );
             });
 
-            // --- 4. SLIDE IN LEFT/RIGHT ---
-            const slideLeft = document.querySelectorAll('.gsap-slide-left');
-            slideLeft.forEach(elem => {
-                gsap.fromTo(elem, { x: -50, opacity: 0 }, {
-                    x: 0, opacity: 1, duration: 1.2, ease: "power2.out",
-                    scrollTrigger: { trigger: elem, start: "top 80%", toggleActions: "play reverse play reverse" }
-                });
+            // 4. SLIDE IN
+            document.querySelectorAll('.gsap-slide-left').forEach(elem => {
+                gsap.fromTo(elem, { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 1.2, ease: "power2.out", scrollTrigger: { trigger: elem, start: "top 80%", toggleActions: "play reverse play reverse" } });
             });
-            const slideRight = document.querySelectorAll('.gsap-slide-right');
-            slideRight.forEach(elem => {
-                gsap.fromTo(elem, { x: 50, opacity: 0 }, {
-                    x: 0, opacity: 1, duration: 1.2, ease: "power2.out",
-                    scrollTrigger: { trigger: elem, start: "top 80%", toggleActions: "play reverse play reverse" }
-                });
+            document.querySelectorAll('.gsap-slide-right').forEach(elem => {
+                gsap.fromTo(elem, { x: 50, opacity: 0 }, { x: 0, opacity: 1, duration: 1.2, ease: "power2.out", scrollTrigger: { trigger: elem, start: "top 80%", toggleActions: "play reverse play reverse" } });
             });
 
-            // --- 5. STAGGERED LISTS ---
+            // 5. STAGGERED LISTS
             const animateBatch = (selector) => {
                 ScrollTrigger.batch(selector, {
                     start: "top 85%",
@@ -608,7 +660,7 @@
             }
             animateBatch(".gsap-stagger-up");
             
-            // --- 6. GALLERY POP ---
+            // 6. GALLERY POP
             const galleryItems = document.querySelectorAll(".gsap-pop");
             gsap.set(galleryItems, {scale: 0.9, opacity: 0});
             ScrollTrigger.batch(".gsap-pop", {
@@ -618,7 +670,6 @@
                 onEnterBack: batch => gsap.to(batch, {opacity: 1, scale: 1, stagger: 0.1}),
                 onLeaveBack: batch => gsap.to(batch, {opacity: 0, scale: 0.9})
             });
-
         });
     </script>
 
