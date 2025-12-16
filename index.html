@@ -105,14 +105,14 @@
             background: rgba(0,0,0,0.2); z-index: 2;
         }
         
-        /* The Portal: วงกลมสีขาวตรงกลางที่จะขยายออก */
+        /* The Portal: แก้ไขสีเป็นสีขาว #fff */
         .hero-portal {
             position: absolute;
             top: 50%; left: 50%;
-            width: 100px; height: 100px; /* เริ่มต้นเล็กๆ */
-            background-color: var(--bg-primary);
+            width: 50px; height: 50px; /* เริ่มต้นเล็กๆ */
+            background-color: #ffffff; /* Pure White */
             border-radius: 50%;
-            transform: translate(-50%, -50%) scale(0); /* เริ่มจาก 0 */
+            transform: translate(-50%, -50%) scale(0); 
             z-index: 3;
             pointer-events: none;
             will-change: transform;
@@ -128,7 +128,8 @@
         #hero-subtitle { will-change: opacity, transform; }
         .hero-btn-wrapper { will-change: opacity; }
 
-        /* Overview */
+        /* Overview - เพิ่ม class สำหรับทำ Fade In */
+        .overview-fade-wrapper { opacity: 0; /* เริ่มต้นซ่อนไว้ */ }
         .split-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; }
         .img-stack { position: relative; }
         .img-main { width: 100%; height: 600px; object-fit: cover; border-radius: 4px; }
@@ -259,21 +260,23 @@
     </section>
 
     <section id="overview" class="section-padding">
-        <div class="container split-layout">
-            <div class="text-block gsap-fade-up">
-                <span class="script-font">Welcome to</span>
-                <h2>MODERN COASTAL<br>SANCTUARY</h2>
-                <div class="header-divider"></div>
-                <p style="color: var(--text-muted); margin-bottom: 20px;">Experience the perfect blend of luxury and nature. Our villas are designed with a 'Sand Tone' palette, warm whites, and palm greens to create a soothing atmosphere for your soul.</p>
-                <div style="margin-top: 40px;">
-                    <span style="font-family: 'Allura'; font-size: 2.5rem; color: var(--accent-green);">Npm Properties</span>
-                    <p style="font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;">Developer Signature</p>
+        <div class="container overview-fade-wrapper">
+            <div class="split-layout">
+                <div class="text-block">
+                    <span class="script-font">Welcome to</span>
+                    <h2>MODERN COASTAL<br>SANCTUARY</h2>
+                    <div class="header-divider"></div>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">Experience the perfect blend of luxury and nature. Our villas are designed with a 'Sand Tone' palette, warm whites, and palm greens to create a soothing atmosphere for your soul.</p>
+                    <div style="margin-top: 40px;">
+                        <span style="font-family: 'Allura'; font-size: 2.5rem; color: var(--accent-green);">Npm Properties</span>
+                        <p style="font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;">Developer Signature</p>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="img-stack gsap-fade-up" data-delay="0.2">
-                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1974" class="img-main" alt="Villa Interior">
-                <img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=2070" class="img-offset" alt="Pool Detail">
+                
+                <div class="img-stack">
+                    <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1974" class="img-main" alt="Villa Interior">
+                    <img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=2070" class="img-offset" alt="Pool Detail">
+                </div>
             </div>
         </div>
     </section>
@@ -504,49 +507,61 @@
             
             gsap.registerPlugin(ScrollTrigger);
 
-            // --- 1. HERO PORTAL ZOOM (Center Expanding White) ---
+            // --- 1. HERO PORTAL ZOOM (White Circle & Extreme Text Zoom) ---
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: "#home",
                     start: "top top",
-                    end: "+=2500", // ระยะการเลื่อนที่เหมาะสม (ไม่นานเกินไป)
+                    end: "+=2500",
                     pin: true,
                     scrub: 1,
                     anticipatePin: 1
                 }
             });
 
-            // Step 1: ซูมตัวหนังสือเข้าหา
+            // ซูมตัวหนังสือให้ทะลุจอ (Scale 250!)
             tl.to("#hero-title", {
-                scale: 50, // ซูมทะลุ
+                scale: 250, 
                 duration: 2,
                 ease: "power2.inOut"
             })
-            // Step 2: พร้อมกันนั้น ให้วงกลมขาว (.hero-portal) ขยายจากตรงกลางจนเต็มจอ
+            // ขยายวงกลมสีขาวให้เต็มจอพร้อมกัน
             .to(".hero-portal", {
-                scale: 100, // ขยายใหญ่จนบังมิด
+                scale: 150,
                 duration: 2,
                 ease: "power2.inOut"
             }, "<")
-            // Step 3: Fade Elements อื่นๆ ออก
+            // ซ่อนองค์ประกอบอื่นๆ
             .to(["#hero-subtitle", ".hero-btn-wrapper", ".hero-bg"], {
                 opacity: 0,
                 duration: 0.5
             }, "<0.5");
 
-
-            // --- 2. NAVBAR TRIGGER (Changed to trigger on Section 2) ---
-            // Navbar จะเปลี่ยนสีก็ต่อเมื่อเข้าสู่ Overview แล้วเท่านั้น
+            // --- 2. NAVBAR TRIGGER (Corrected) ---
+            // เปลี่ยนสีเมนูเมื่อเข้าสู่ Section Overview เท่านั้น
             ScrollTrigger.create({
-                trigger: "#overview", // เปลี่ยนจุด Trigger เป็น Section ถัดไป
-                start: "top top", // เริ่มเมื่อ Overview ชนขอบบน
+                trigger: "#overview",
+                start: "top top", 
                 end: "bottom top", 
                 onEnter: () => document.getElementById("navbar").classList.add("scrolled"),
                 onLeaveBack: () => document.getElementById("navbar").classList.remove("scrolled")
             });
 
+            // --- 3. OVERVIEW GENTLE FADE IN (New) ---
+            // ค่อยๆ Fade เนื้อหา Section 2 เข้ามาเมื่อเลื่อนถึง
+            gsap.to(".overview-fade-wrapper", {
+                opacity: 1,
+                duration: 1.5,
+                ease: "power2.inOut",
+                scrollTrigger: {
+                    trigger: "#overview",
+                    start: "top center", // เริ่ม Fade เมื่อ Section มาถึงกลางจอ
+                    toggleActions: "play none none reverse"
+                }
+            });
 
-            // --- 3. UNIVERSAL FADE UP ---
+
+            // --- 4. UNIVERSAL FADE UP (For other sections) ---
             const fadeUpElements = document.querySelectorAll('.gsap-fade-up');
             fadeUpElements.forEach(elem => {
                 gsap.fromTo(elem, 
@@ -563,38 +578,23 @@
                 );
             });
 
-            // --- 4. SLIDE IN LEFT/RIGHT ---
+            // --- 5. SLIDE IN LEFT/RIGHT ---
             const slideLeft = document.querySelectorAll('.gsap-slide-left');
             slideLeft.forEach(elem => {
-                gsap.fromTo(elem,
-                    { x: -50, opacity: 0 },
-                    {
-                        x: 0, opacity: 1, duration: 1.2, ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: elem,
-                            start: "top 80%",
-                            toggleActions: "play reverse play reverse"
-                        }
-                    }
-                );
+                gsap.fromTo(elem, { x: -50, opacity: 0 }, {
+                    x: 0, opacity: 1, duration: 1.2, ease: "power2.out",
+                    scrollTrigger: { trigger: elem, start: "top 80%", toggleActions: "play reverse play reverse" }
+                });
             });
-
             const slideRight = document.querySelectorAll('.gsap-slide-right');
             slideRight.forEach(elem => {
-                gsap.fromTo(elem,
-                    { x: 50, opacity: 0 },
-                    {
-                        x: 0, opacity: 1, duration: 1.2, ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: elem,
-                            start: "top 80%",
-                            toggleActions: "play reverse play reverse"
-                        }
-                    }
-                );
+                gsap.fromTo(elem, { x: 50, opacity: 0 }, {
+                    x: 0, opacity: 1, duration: 1.2, ease: "power2.out",
+                    scrollTrigger: { trigger: elem, start: "top 80%", toggleActions: "play reverse play reverse" }
+                });
             });
 
-            // --- 5. STAGGERED LISTS ---
+            // --- 6. STAGGERED LISTS ---
             const animateBatch = (selector) => {
                 ScrollTrigger.batch(selector, {
                     start: "top 85%",
@@ -607,14 +607,12 @@
             }
             animateBatch(".gsap-stagger-up");
             
-            // --- 6. GALLERY POP ---
+            // --- 7. GALLERY POP ---
             const galleryItems = document.querySelectorAll(".gsap-pop");
             gsap.set(galleryItems, {scale: 0.9, opacity: 0});
             ScrollTrigger.batch(".gsap-pop", {
                 start: "top 85%",
-                onEnter: batch => gsap.to(batch, {
-                    scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.7)", stagger: 0.1
-                }),
+                onEnter: batch => gsap.to(batch, { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.7)", stagger: 0.1 }),
                 onLeave: batch => gsap.to(batch, {opacity: 0, scale: 0.9}),
                 onEnterBack: batch => gsap.to(batch, {opacity: 1, scale: 1, stagger: 0.1}),
                 onLeaveBack: batch => gsap.to(batch, {opacity: 0, scale: 0.9})
