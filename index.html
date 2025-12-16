@@ -87,13 +87,21 @@
         .nav-btn-highlight { background-color: #fff; color: var(--text-main) !important; padding: 12px 30px; transition: 0.3s;}
         nav.scrolled .nav-btn-highlight { background-color: var(--accent-green); color: #fff !important; }
 
-        /* --- HERO (UPDATED WITH PORTAL EFFECT) --- */
+        /* --- HERO & PINNED WRAPPER --- */
+        /* เราใช้ Wrapper หุ้มทั้ง Hero และ Overview เพื่อตรึงไว้ที่เดิม */
+        .pinned-wrapper {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
         #home {
             height: 100vh; 
             width: 100%;
-            position: relative; 
+            position: absolute; top: 0; left: 0; /* ซ้อนกัน */
             display: flex; align-items: center; justify-content: center; text-align: center; 
-            overflow: hidden;
+            z-index: 1;
         }
         .hero-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -105,12 +113,11 @@
             background: rgba(0,0,0,0.2); z-index: 2;
         }
         
-        /* The Portal: แก้ไขสีเป็นสีขาว #fff */
+        /* The Portal: สีขาว #FFFFFF สีเดียวกับตัวหนังสือเป๊ะ */
         .hero-portal {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 50px; height: 50px; /* เริ่มต้นเล็กๆ */
-            background-color: #ffffff; /* Pure White */
+            position: absolute; top: 50%; left: 50%;
+            width: 50px; height: 50px;
+            background-color: #FFFFFF; 
             border-radius: 50%;
             transform: translate(-50%, -50%) scale(0); 
             z-index: 3;
@@ -125,11 +132,19 @@
             text-shadow: 0 4px 30px rgba(0,0,0,0.3);
             will-change: transform, opacity; transform-origin: center center;
         }
-        #hero-subtitle { will-change: opacity, transform; }
-        .hero-btn-wrapper { will-change: opacity; }
+        #hero-subtitle, .hero-btn-wrapper { will-change: opacity; }
 
-        /* Overview - เพิ่ม class สำหรับทำ Fade In */
-        .overview-fade-wrapper { opacity: 0; /* เริ่มต้นซ่อนไว้ */ }
+        /* --- OVERVIEW (ซ้อนทับ Hero แต่อยู่ด้านบน) --- */
+        #overview {
+            height: 100vh;
+            width: 100%;
+            position: absolute; top: 0; left: 0; /* ซ้อนทับ Hero เลย */
+            z-index: 5; /* อยู่เหนือ Hero */
+            background-color: var(--bg-primary); /* พื้นหลังทึบ */
+            display: flex; align-items: center;
+            opacity: 0; /* ซ่อนไว้ก่อน */
+            visibility: hidden;
+        }
         .split-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; }
         .img-stack { position: relative; }
         .img-main { width: 100%; height: 600px; object-fit: cover; border-radius: 4px; }
@@ -245,23 +260,22 @@
         </div>
     </nav>
 
-    <section id="home">
-        <div class="hero-bg"></div>
-        <div class="hero-overlay"></div>
-        <div class="hero-portal"></div>
+    <div class="pinned-wrapper" id="pinned-wrapper">
         
-        <div class="hero-content container">
-            <span class="script-font" id="hero-subtitle" style="color: #fff; font-size: 4rem;">Exhale Into Paradise</span>
-            <h1 id="hero-title">SONATA SANDS</h1>
-            <div class="hero-btn-wrapper">
-                <a href="#villa-types" class="btn" style="background: #fff; color: var(--text-main) !important;">Discover The Villas</a>
+        <section id="home">
+            <div class="hero-bg"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-portal"></div> <div class="hero-content container">
+                <span class="script-font" id="hero-subtitle" style="color: #fff; font-size: 4rem;">Exhale Into Paradise</span>
+                <h1 id="hero-title">SONATA SANDS</h1>
+                <div class="hero-btn-wrapper">
+                    <a href="#villa-types" class="btn" style="background: #fff; color: var(--text-main) !important;">Discover The Villas</a>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="overview" class="section-padding">
-        <div class="container overview-fade-wrapper">
-            <div class="split-layout">
+        <section id="overview" class="section-padding">
+            <div class="container split-layout">
                 <div class="text-block">
                     <span class="script-font">Welcome to</span>
                     <h2>MODERN COASTAL<br>SANCTUARY</h2>
@@ -278,8 +292,9 @@
                     <img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=2070" class="img-offset" alt="Pool Detail">
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+    </div>
 
     <section id="villa-types">
         <div class="villa-header-container gsap-fade-up">
@@ -332,7 +347,6 @@
                 <h2>THE GALLERY</h2>
                 <div class="header-divider"></div>
             </div>
-            
             <div class="gallery-masonry">
                 <div class="g-item g-wide g-tall gsap-pop">
                     <video autoplay muted loop playsinline>
@@ -507,61 +521,54 @@
             
             gsap.registerPlugin(ScrollTrigger);
 
-            // --- 1. HERO PORTAL ZOOM (White Circle & Extreme Text Zoom) ---
+            // --- 1. HERO & OVERVIEW SEQUENCE (Seamless Fade) ---
             const tl = gsap.timeline({
                 scrollTrigger: {
-                    trigger: "#home",
+                    trigger: "#pinned-wrapper",
                     start: "top top",
-                    end: "+=2500",
-                    pin: true,
-                    scrub: 1,
-                    anticipatePin: 1
+                    end: "+=2500", // ระยะการเลื่อนเพื่อซูม
+                    pin: true,     // ตรึงไว้
+                    scrub: 1       // ความนุ่มนวล
                 }
             });
 
-            // ซูมตัวหนังสือให้ทะลุจอ (Scale 250!)
+            // ซูมตัวหนังสือทะลุจอ (Scale 250 = ใหญ่มาก)
             tl.to("#hero-title", {
                 scale: 250, 
-                duration: 2,
+                duration: 3,
                 ease: "power2.inOut"
             })
-            // ขยายวงกลมสีขาวให้เต็มจอพร้อมกัน
+            // ขยายวงกลมขาวให้เต็มจอ (สีขาว #fff กลืนกับตัวหนังสือ)
             .to(".hero-portal", {
                 scale: 150,
-                duration: 2,
+                duration: 3,
                 ease: "power2.inOut"
             }, "<")
-            // ซ่อนองค์ประกอบอื่นๆ
-            .to(["#hero-subtitle", ".hero-btn-wrapper", ".hero-bg"], {
+            // เฟดองค์ประกอบ Hero อื่นๆ ออก
+            .to(["#hero-subtitle", ".hero-btn-wrapper", ".hero-bg", ".hero-overlay"], {
                 opacity: 0,
-                duration: 0.5
-            }, "<0.5");
+                duration: 1
+            }, "<0.5")
+            // *** ทีเด็ด: FADE IN OVERVIEW (ปรากฏขึ้นมาช้าๆ ทับจอขาว) ***
+            // เราใช้ autoAlpha เพื่อจัดการทั้ง opacity และ visibility
+            .to("#overview", {
+                autoAlpha: 1, 
+                duration: 1.5,
+                ease: "power1.inOut"
+            }, "-=1.5"); // เริ่มเฟดเข้ามาก่อนซูมเสร็จเล็กน้อย เพื่อความต่อเนื่อง
 
-            // --- 2. NAVBAR TRIGGER (Corrected) ---
-            // เปลี่ยนสีเมนูเมื่อเข้าสู่ Section Overview เท่านั้น
+
+            // --- 2. NAVBAR TRIGGER (เปลี่ยนสีเมื่อเข้าสู่ Overview เต็มตัว) ---
+            // Trigger นี้แยกออกมาเพื่อจับจังหวะการเปลี่ยนสีเมนูให้ตรงกับการเฟดของ Overview
             ScrollTrigger.create({
-                trigger: "#overview",
-                start: "top top", 
-                end: "bottom top", 
+                trigger: "#pinned-wrapper",
+                start: "bottom bottom", // เมื่อสิ้นสุดการ Pin (เข้าสู่หน้าปกติ)
                 onEnter: () => document.getElementById("navbar").classList.add("scrolled"),
                 onLeaveBack: () => document.getElementById("navbar").classList.remove("scrolled")
             });
 
-            // --- 3. OVERVIEW GENTLE FADE IN (New) ---
-            // ค่อยๆ Fade เนื้อหา Section 2 เข้ามาเมื่อเลื่อนถึง
-            gsap.to(".overview-fade-wrapper", {
-                opacity: 1,
-                duration: 1.5,
-                ease: "power2.inOut",
-                scrollTrigger: {
-                    trigger: "#overview",
-                    start: "top center", // เริ่ม Fade เมื่อ Section มาถึงกลางจอ
-                    toggleActions: "play none none reverse"
-                }
-            });
 
-
-            // --- 4. UNIVERSAL FADE UP (For other sections) ---
+            // --- 3. UNIVERSAL FADE UP (Other sections) ---
             const fadeUpElements = document.querySelectorAll('.gsap-fade-up');
             fadeUpElements.forEach(elem => {
                 gsap.fromTo(elem, 
@@ -578,7 +585,7 @@
                 );
             });
 
-            // --- 5. SLIDE IN LEFT/RIGHT ---
+            // --- 4. SLIDE IN LEFT/RIGHT ---
             const slideLeft = document.querySelectorAll('.gsap-slide-left');
             slideLeft.forEach(elem => {
                 gsap.fromTo(elem, { x: -50, opacity: 0 }, {
@@ -594,7 +601,7 @@
                 });
             });
 
-            // --- 6. STAGGERED LISTS ---
+            // --- 5. STAGGERED LISTS ---
             const animateBatch = (selector) => {
                 ScrollTrigger.batch(selector, {
                     start: "top 85%",
@@ -607,7 +614,7 @@
             }
             animateBatch(".gsap-stagger-up");
             
-            // --- 7. GALLERY POP ---
+            // --- 6. GALLERY POP ---
             const galleryItems = document.querySelectorAll(".gsap-pop");
             gsap.set(galleryItems, {scale: 0.9, opacity: 0});
             ScrollTrigger.batch(".gsap-pop", {
