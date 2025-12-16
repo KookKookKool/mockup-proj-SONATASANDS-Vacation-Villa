@@ -17,7 +17,7 @@
     <style>
         /* --- DESIGN SYSTEM --- */
         :root {
-            --bg-primary: #FDFBF7; /* สีพื้นหลังหลัก (ขาวนวล) */
+            --bg-primary: #FDFBF7;
             --bg-sand: #F4F1EA;
             --text-main: #594A3C;   
             --text-gold: #9C8C74;
@@ -87,7 +87,7 @@
         .nav-btn-highlight { background-color: #fff; color: var(--text-main) !important; padding: 12px 30px; transition: 0.3s;}
         nav.scrolled .nav-btn-highlight { background-color: var(--accent-green); color: #fff !important; }
 
-        /* --- HERO (SMOOTH WHITE-OUT) --- */
+        /* --- HERO (UPDATED WITH PORTAL EFFECT) --- */
         #home {
             height: 100vh; 
             width: 100%;
@@ -105,13 +105,17 @@
             background: rgba(0,0,0,0.2); z-index: 2;
         }
         
-        /* Layer สีขาวที่จะ Fade ขึ้นมาบัง */
-        .hero-white-transition {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--bg-primary); /* สีเดียวกับ Section ถัดไป */
+        /* The Portal: วงกลมสีขาวตรงกลางที่จะขยายออก */
+        .hero-portal {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 100px; height: 100px; /* เริ่มต้นเล็กๆ */
+            background-color: var(--bg-primary);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0); /* เริ่มจาก 0 */
             z-index: 3;
-            opacity: 0; /* เริ่มต้นซ่อนไว้ */
             pointer-events: none;
+            will-change: transform;
         }
 
         .hero-content { position: relative; z-index: 4; color: #fff; width: 100%; }
@@ -243,7 +247,7 @@
     <section id="home">
         <div class="hero-bg"></div>
         <div class="hero-overlay"></div>
-        <div class="hero-white-transition"></div>
+        <div class="hero-portal"></div>
         
         <div class="hero-content container">
             <span class="script-font" id="hero-subtitle" style="color: #fff; font-size: 4rem;">Exhale Into Paradise</span>
@@ -500,48 +504,47 @@
             
             gsap.registerPlugin(ScrollTrigger);
 
-            // --- 1. HERO SUPER SMOOTH & WHITE OUT ---
+            // --- 1. HERO PORTAL ZOOM (Center Expanding White) ---
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: "#home",
                     start: "top top",
-                    end: "+=3000", // เพิ่มระยะ Scroll ให้ยาวมาก เพื่อความนุ่มนวล
-                    pin: true,     // ตรึงไว้
-                    scrub: 1       // ความหน่วงพอดีมือ
+                    end: "+=2500", // ระยะการเลื่อนที่เหมาะสม (ไม่นานเกินไป)
+                    pin: true,
+                    scrub: 1,
+                    anticipatePin: 1
                 }
             });
 
-            // 1.1 Zoom Text เข้าหาคนดู (ขยายใหญ่)
+            // Step 1: ซูมตัวหนังสือเข้าหา
             tl.to("#hero-title", {
-                scale: 15, // ซูมเยอะๆ
+                scale: 50, // ซูมทะลุ
                 duration: 2,
-                ease: "power1.inOut"
+                ease: "power2.inOut"
             })
-            // 1.2 พร้อมๆ กัน ตัวหนังสือค่อยๆ จางหายไป
-            .to("#hero-title", {
-                opacity: 0,
-                duration: 1
-            }, "<0.5") // เริ่มหลังจากซูมไปนิดนึง
-            // 1.3 Fade ตัวหนังสือเล็กและปุ่มออก
-            .to(["#hero-subtitle", ".hero-btn-wrapper"], {
-                opacity: 0,
-                y: -50,
-                duration: 0.5
+            // Step 2: พร้อมกันนั้น ให้วงกลมขาว (.hero-portal) ขยายจากตรงกลางจนเต็มจอ
+            .to(".hero-portal", {
+                scale: 100, // ขยายใหญ่จนบังมิด
+                duration: 2,
+                ease: "power2.inOut"
             }, "<")
-            // 1.4 *** ทีเด็ด: ม่านขาว Fade เข้ามาทับ ***
-            .to(".hero-white-transition", {
-                opacity: 1,
-                duration: 1,
-                ease: "power1.inOut"
-            }, "-=1"); // Fade เข้ามาช่วงท้ายๆ ของการซูม
+            // Step 3: Fade Elements อื่นๆ ออก
+            .to(["#hero-subtitle", ".hero-btn-wrapper", ".hero-bg"], {
+                opacity: 0,
+                duration: 0.5
+            }, "<0.5");
 
-            // --- 2. NAV GRADIENT ---
-            const nav = document.getElementById("navbar");
+
+            // --- 2. NAVBAR TRIGGER (Changed to trigger on Section 2) ---
+            // Navbar จะเปลี่ยนสีก็ต่อเมื่อเข้าสู่ Overview แล้วเท่านั้น
             ScrollTrigger.create({
-                start: "top -50",
-                end: 99999,
-                toggleClass: { className: "scrolled", targets: nav }
+                trigger: "#overview", // เปลี่ยนจุด Trigger เป็น Section ถัดไป
+                start: "top top", // เริ่มเมื่อ Overview ชนขอบบน
+                end: "bottom top", 
+                onEnter: () => document.getElementById("navbar").classList.add("scrolled"),
+                onLeaveBack: () => document.getElementById("navbar").classList.remove("scrolled")
             });
+
 
             // --- 3. UNIVERSAL FADE UP ---
             const fadeUpElements = document.querySelectorAll('.gsap-fade-up');
